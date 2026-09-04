@@ -1,0 +1,25 @@
+{
+  "focus_terms": ["tracing", "traces", "trace", "spans", "span", "sdk", "agents", "sensitive", "data", "workflow"],
+  "references": [
+    {
+      "id": "ref_a",
+      "statement": "OpenAI Agents SDK tracing is enabled by default.",
+      "note": "Expected reinforcement."
+    },
+    {
+      "id": "ref_b",
+      "statement": "OpenAI Agents SDK tracing is disabled by default.",
+      "note": "Expected conflict. Differs from ref_a by one token, which is the point."
+    },
+    {
+      "id": "ref_c",
+      "statement": "The billing subsystem retries failed invoice exports every six hours.",
+      "note": "Expected unrelated. No material relationship to Agents SDK tracing defaults."
+    }
+  ],
+  "expectations": [
+    {"reference_id": "ref_a", "expected": "reinforcing"},
+    {"reference_id": "ref_b", "expected": "conflicting"},
+    {"reference_id": "ref_c", "expected": "unrelated"}
+  ]
+}
