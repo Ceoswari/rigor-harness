@@ -28,7 +28,11 @@ def write_markdown(run: Dict, verification: Dict, path: str) -> str:
     lines.append("## Source")
     lines.append("")
     lines.append("- URL: %s" % src["url"])
-    lines.append("- Fetched: %s (HTTP %s)" % (src["last_seen_at"], src["http_status"]))
+    if src.get("fetch_mode") == "offline_fixture":
+        lines.append("- Loaded: %s from saved copy `%s` (no network request)"
+                     % (src["last_seen_at"], src.get("fixture_path")))
+    else:
+        lines.append("- Fetched: %s (HTTP %s)" % (src["last_seen_at"], src["http_status"]))
     lines.append("- Content SHA-256: `%s`" % src["content_sha256"][:16])
     lines.append("- Revision count: %s" % src.get("revision_count"))
     lines.append("")

@@ -1,6 +1,6 @@
 """Independent verification of a run.
 
-This module is deliberately deterministic and shares no logic with extraction
+This module is deliberately deterministic and imports nothing from extraction
 or comparison. It re-derives what it checks from the run artefacts rather than
 trusting any field the pipeline set about itself.
 
@@ -8,9 +8,18 @@ That separation is the point. Handoff invariant B says a run is not successful
 because the thing that produced it says so, and a verifier that reuses the
 classifier's own reasoning cannot catch the classifier's own mistakes.
 """
+import re
 from typing import Dict, List
 
-from .claims import content_tokens
+# Kept separate from harness.claims on purpose: the verifier does not import
+# the pipeline's own tokenizer, so a bug there cannot hide itself here.
+_STOP = {"a", "an", "the", "is", "are", "be", "by", "of", "to", "in", "on",
+         "it", "and", "or", "for", "with"}
+
+
+def content_tokens(text: str) -> set:
+    return {t for t in re.findall(r"[a-z0-9_]+", text.lower())
+            if t not in _STOP and len(t) > 1}
 
 
 def _check(check_id: str, passed: bool, detail: str) -> Dict:

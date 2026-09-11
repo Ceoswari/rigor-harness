@@ -51,11 +51,15 @@ def main(argv=None):
         with open(args.offline_fixture, "rb") as fh:
             body = fh.read()
         import hashlib, time
-        raw = {"url": args.source, "http_status": 200,
+        # No HTTP request happened, so none is claimed: status is None and
+        # fetch_mode says where the bytes actually came from.
+        raw = {"url": args.source, "http_status": None,
                "fetched_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
                "content_sha256": hashlib.sha256(body).hexdigest(),
                "content_length": len(body), "etag": None, "last_modified": None,
-               "content_type": "text/html", "_body": body}
+               "content_type": "text/html", "_body": body,
+               "fetch_mode": "offline_fixture",
+               "fixture_path": os.path.relpath(args.offline_fixture, HERE)}
     else:
         raw = fetch(args.source)
 

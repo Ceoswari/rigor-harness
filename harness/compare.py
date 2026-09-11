@@ -55,18 +55,26 @@ def compare_one(reference: Dict, claims: List[Dict]) -> Dict:
         return _result(reference, DISTINCT, claim, score,
                        "Same subject, but the source speaks to a different property.")
 
-    score, claim = max(same_axis, key=lambda pair: pair[0])
+    # Scope before overlap. "Tracing is enabled by default" is not
+    # contradicted by "you can disable tracing for a single run", so a claim
+    # carrying the reference's own qualifiers is preferred over one that
+    # merely shares more words.
+    ref_quals = set(ref_prop["qualifiers"])
+    score, claim = max(
+        same_axis,
+        key=lambda pair: (len(ref_quals & set(pair[1]["qualifiers"])), pair[0]))
+    claim_quals = set(claim["qualifiers"])
+
     if claim["polarity"] == ref_prop["polarity"]:
         label, why = REINFORCING, "Same subject and axis, same polarity."
     else:
         label, why = CONFLICTING, "Same subject and axis, opposite polarity."
 
-    ref_quals, claim_quals = set(ref_prop["qualifiers"]), set(claim["qualifiers"])
-    if ref_quals and claim_quals and not (ref_quals & claim_quals):
+    if ref_quals and not (ref_quals & claim_quals):
         label = INDETERMINATE
-        why = ("Polarity comparison is not decisive: the reference and the source "
-               "claim are scoped by different qualifiers (%s vs %s)."
-               % (sorted(ref_quals), sorted(claim_quals)))
+        why = ("Polarity comparison is not decisive: the reference is scoped %s "
+               "and no source claim on this axis carries that scope (closest "
+               "is scoped %s)." % (sorted(ref_quals), sorted(claim_quals) or "not at all"))
 
     result = _result(reference, label, claim, score, why)
     result["reference_proposition"] = ref_prop

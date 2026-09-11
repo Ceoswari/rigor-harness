@@ -15,32 +15,56 @@ USER_AGENT = "rigor-harness/0.1 (pilot; contact: repo owner)"
 
 
 class _TextExtractor(HTMLParser):
-    """Collect visible text, dropping script/style/nav chrome."""
+    """Collect visible prose, one block element per line.
 
-    SKIP = {"script", "style", "nav", "header", "footer", "noscript"}
+    Line breaks come only from block-level tags. Inline tags (code, a, em)
+    join into the surrounding sentence, so "set the env var
+    <code>OPENAI_AGENTS_DISABLE_TRACING=1</code>" stays one sentence instead
+    of being cut at the code span. Code blocks (<pre>) are dropped: they are
+    examples, not claims.
+    """
+
+    SKIP = {"script", "style", "nav", "header", "footer", "noscript", "pre"}
+    BLOCK = {"p", "li", "dt", "dd", "div", "section", "article", "blockquote",
+             "h1", "h2", "h3", "h4", "h5", "h6", "table", "tr", "td", "th",
+             "ul", "ol", "dl", "br", "hr", "details", "summary", "figcaption"}
 
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
         self._skip_depth = 0
-        self._parts: List[str] = []
+        self._lines: List[str] = []
+        self._current: List[str] = []
+
+    def _break(self) -> None:
+        line = re.sub(r"\s+", " ", "".join(self._current)).strip()
+        if line:
+            self._lines.append(line)
+        self._current = []
 
     def handle_starttag(self, tag, attrs):
         if tag in self.SKIP:
             self._skip_depth += 1
+        elif tag in self.BLOCK and not self._skip_depth:
+            self._break()
+
+    def handle_startendtag(self, tag, attrs):
+        if tag in self.BLOCK and not self._skip_depth:
+            self._break()
 
     def handle_endtag(self, tag):
-        if tag in self.SKIP and self._skip_depth:
-            self._skip_depth -= 1
+        if tag in self.SKIP:
+            if self._skip_depth:
+                self._skip_depth -= 1
+        elif tag in self.BLOCK and not self._skip_depth:
+            self._break()
 
     def handle_data(self, data):
-        if self._skip_depth:
-            return
-        text = data.strip()
-        if text:
-            self._parts.append(text)
+        if not self._skip_depth:
+            self._current.append(data)
 
     def text(self) -> str:
-        return "\n".join(self._parts)
+        self._break()
+        return "\n".join(self._lines)
 
 
 def fetch(url: str, timeout: int = 30) -> Dict:
@@ -64,6 +88,7 @@ def fetch(url: str, timeout: int = 30) -> Dict:
         "last_modified": headers.get("last-modified"),
         "content_type": headers.get("content-type"),
         "_body": body,
+        "fetch_mode": "live_http",
     }
 
 
@@ -89,6 +114,8 @@ def to_source_record(fetch_record: Dict) -> Dict:
         "etag": fetch_record["etag"],
         "last_modified": fetch_record["last_modified"],
         "content_type": fetch_record["content_type"],
+        "fetch_mode": fetch_record.get("fetch_mode", "live_http"),
+        "fixture_path": fetch_record.get("fixture_path"),
         "revision_count": 1,
         "text": text,
     }
@@ -117,6 +144,8 @@ class SourceStore:
             return {"action": "created", "record": record, "content_changed": False}
         changed = existing["content_sha256"] != record["content_sha256"]
         existing["last_seen_at"] = record["last_seen_at"]
+        existing["fetch_mode"] = record.get("fetch_mode")
+        existing["fixture_path"] = record.get("fixture_path")
         if changed:
             existing["content_sha256"] = record["content_sha256"]
             existing["content_length"] = record["content_length"]
