@@ -7,57 +7,61 @@ Two sets, because one number on its own would mislead. The stress set was writte
 
 ## Stress set: 3 of 14 correct (21%)
 
-Advance predictions correct: 9 of 14.
+Advance predictions correct: 7 of 14.
 
-It offered an opinion (any label but unrelated) 9 times and was right 2 of those, so precision 22% against recall 21%.
+Declined to decide, by recorded reason: `no_axis_for_statement` 4, `subject_absent_from_source` 1, `subject_present_but_not_extracted` 2.
+
+It asserted a relationship 7 times and was right 2 of those, so precision 29% against recall 21%.
 
 Errors: false conflict 3, missed conflict 2, missed support 6.
 
-| id | reference | truth | actual | |
-|---|---|---|---|---|
-| h01 | Agents SDK tracing is turned on unless you disable it. | reinforcing | conflicting | **miss** (false conflict) |
-| h02 | Tracing is unavailable for organizations that use OpenAI's APIs under a Zero Data Retention policy. | reinforcing | distinct | **miss** (missed support) |
-| h03 | Sensitive data capture cannot be disabled in the Agents SDK. | conflicting | unrelated | **miss** (missed conflict) |
-| h04 | The trace_include_sensitive_data setting is True by default. | reinforcing | distinct | **miss** (missed support) |
-| h05 | You can disable tracing for one run using RunConfig. | reinforcing | conflicting | **miss** (false conflict) |
-| h06 | Tracing must be enabled manually before it will record anything. | conflicting | reinforcing | **miss** (missed conflict) |
-| h07 | Kubernetes pods are evicted when a node runs out of memory. | unrelated | unrelated | ok |
-| h08 | Traces are composed of spans. | reinforcing | unrelated | **miss** (missed support) |
-| h09 | Tracing is disabled by default for organizations with Zero Data Retention. | indeterminate | conflicting | **miss** (false conflict) |
-| h10 | Custom trace processors can push traces to other destinations. | reinforcing | unrelated | **miss** (missed support) |
-| h11 | Tracing is enabled by default in the Agents SDK, so no setup is required. | reinforcing | reinforcing | ok |
-| h12 | The SDK records spans for guardrails. | reinforcing | distinct | **miss** (missed support) |
-| h13 | Audio span data is captured by default. | reinforcing | unrelated | **miss** (missed support) |
-| h14 | Tracing cannot be disabled globally. | conflicting | conflicting | ok |
+| id | reference | truth | actual | reason | |
+|---|---|---|---|---|---|
+| h01 | Agents SDK tracing is turned on unless you disable it. | reinforcing | conflicting |  | **miss** (false conflict) |
+| h02 | Tracing is unavailable for organizations that use OpenAI's APIs under a Zero Data Retention policy. | reinforcing | unrepresentable | `no_axis_for_statement` | **miss** (missed support) |
+| h03 | Sensitive data capture cannot be disabled in the Agents SDK. | conflicting | uncovered | `subject_present_but_not_extracted` | **miss** (missed conflict) |
+| h04 | The trace_include_sensitive_data setting is True by default. | reinforcing | distinct |  | **miss** (missed support) |
+| h05 | You can disable tracing for one run using RunConfig. | reinforcing | conflicting |  | **miss** (false conflict) |
+| h06 | Tracing must be enabled manually before it will record anything. | conflicting | reinforcing |  | **miss** (missed conflict) |
+| h07 | Kubernetes pods are evicted when a node runs out of memory. | unrelated | unrelated | `subject_absent_from_source` | ok |
+| h08 | Traces are composed of spans. | reinforcing | unrepresentable | `no_axis_for_statement` | **miss** (missed support) |
+| h09 | Tracing is disabled by default for organizations with Zero Data Retention. | indeterminate | conflicting |  | **miss** (false conflict) |
+| h10 | Custom trace processors can push traces to other destinations. | reinforcing | unrepresentable | `no_axis_for_statement` | **miss** (missed support) |
+| h11 | Tracing is enabled by default in the Agents SDK, so no setup is required. | reinforcing | reinforcing |  | ok |
+| h12 | The SDK records spans for guardrails. | reinforcing | unrepresentable | `no_axis_for_statement` | **miss** (missed support) |
+| h13 | Audio span data is captured by default. | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| h14 | Tracing cannot be disabled globally. | conflicting | conflicting |  | ok |
 
 ## Sampled set: 3 of 20 correct (15%)
 
-It offered an opinion (any label but unrelated) 3 times and was right 3 of those, so precision 100% against recall 15%.
+Declined to decide, by recorded reason: `no_axis_for_statement` 17.
+
+It asserted a relationship 3 times and was right 3 of those, so precision 100% against recall 15%.
 
 Errors: missed conflict 7, missed support 10.
 
-| id | reference | truth | actual | |
-|---|---|---|---|---|
-| s01 | The Agents SDK includes built-in tracing, collecting a comprehensive record of events during an agent run: LLM generations, tool calls, handoffs, guardrails, and even custom events that occur. | reinforcing | reinforcing | ok |
-| s02 | You can globally disable tracing in code with set_tracing_disabled(True) | reinforcing | reinforcing | ok |
-| s02n | You can not globally disable tracing in code with set_tracing_disabled(True) | conflicting | conflicting | ok |
-| s03 | Traces represent a single end-to-end operation of a "workflow". | reinforcing | unrelated | **miss** (missed support) |
-| s04 | For example, AgentSpanData contains information about the Agent, GenerationSpanData contains information about the LLM generation, etc. | reinforcing | unrelated | **miss** (missed support) |
-| s05 | Each model turn is wrapped in a turn_span(). | reinforcing | unrelated | **miss** (missed support) |
-| s05n | Each model turn is not wrapped in a turn_span(). | conflicting | unrelated | **miss** (missed conflict) |
-| s06 | Function tool calls are each wrapped in function_span() | reinforcing | unrelated | **miss** (missed support) |
-| s06n | Function tool calls are not each wrapped in function_span() | conflicting | unrelated | **miss** (missed conflict) |
-| s07 | Audio outputs (text-to-speech) are wrapped in a speech_span() | reinforcing | unrelated | **miss** (missed support) |
-| s07n | Audio outputs (text-to-speech) are not wrapped in a speech_span() | conflicting | unrelated | **miss** (missed conflict) |
-| s08 | You can set this name if you use trace, or you can configure the name and other properties with the RunConfig. | reinforcing | unrelated | **miss** (missed support) |
-| s08n | You can not set this name if you use trace, or you can configure the name and other properties with the RunConfig. | conflicting | unrelated | **miss** (missed conflict) |
-| s09 | In addition, you can set up custom trace processors to push traces to other destinations (as a replacement, or secondary destination). | reinforcing | unrelated | **miss** (missed support) |
-| s09n | In addition, you can not set up custom trace processors to push traces to other destinations (as a replacement, or secondary destination). | conflicting | unrelated | **miss** (missed conflict) |
-| s10 | Sometimes, you might want multiple calls to run() to be part of a single trace. | reinforcing | unrelated | **miss** (missed support) |
-| s11 | You can use the trace() function to create a trace. | reinforcing | unrelated | **miss** (missed support) |
-| s11n | You can not use the trace() function to create a trace. | conflicting | unrelated | **miss** (missed conflict) |
-| s12 | You can also manually call trace.start() and trace.finish(). | reinforcing | unrelated | **miss** (missed support) |
-| s12n | You can not also manually call trace.start() and trace.finish(). | conflicting | unrelated | **miss** (missed conflict) |
+| id | reference | truth | actual | reason | |
+|---|---|---|---|---|---|
+| s01 | The Agents SDK includes built-in tracing, collecting a comprehensive record of events during an agent run: LLM generations, tool calls, handoffs, guardrails, and even custom events that occur. | reinforcing | reinforcing |  | ok |
+| s02 | You can globally disable tracing in code with set_tracing_disabled(True) | reinforcing | reinforcing |  | ok |
+| s02n | You can not globally disable tracing in code with set_tracing_disabled(True) | conflicting | conflicting |  | ok |
+| s03 | Traces represent a single end-to-end operation of a "workflow". | reinforcing | unrepresentable | `no_axis_for_statement` | **miss** (missed support) |
+| s04 | For example, AgentSpanData contains information about the Agent, GenerationSpanData contains information about the LLM generation, etc. | reinforcing | unrepresentable | `no_axis_for_statement` | **miss** (missed support) |
+| s05 | Each model turn is wrapped in a turn_span(). | reinforcing | unrepresentable | `no_axis_for_statement` | **miss** (missed support) |
+| s05n | Each model turn is not wrapped in a turn_span(). | conflicting | unrepresentable | `no_axis_for_statement` | **miss** (missed conflict) |
+| s06 | Function tool calls are each wrapped in function_span() | reinforcing | unrepresentable | `no_axis_for_statement` | **miss** (missed support) |
+| s06n | Function tool calls are not each wrapped in function_span() | conflicting | unrepresentable | `no_axis_for_statement` | **miss** (missed conflict) |
+| s07 | Audio outputs (text-to-speech) are wrapped in a speech_span() | reinforcing | unrepresentable | `no_axis_for_statement` | **miss** (missed support) |
+| s07n | Audio outputs (text-to-speech) are not wrapped in a speech_span() | conflicting | unrepresentable | `no_axis_for_statement` | **miss** (missed conflict) |
+| s08 | You can set this name if you use trace, or you can configure the name and other properties with the RunConfig. | reinforcing | unrepresentable | `no_axis_for_statement` | **miss** (missed support) |
+| s08n | You can not set this name if you use trace, or you can configure the name and other properties with the RunConfig. | conflicting | unrepresentable | `no_axis_for_statement` | **miss** (missed conflict) |
+| s09 | In addition, you can set up custom trace processors to push traces to other destinations (as a replacement, or secondary destination). | reinforcing | unrepresentable | `no_axis_for_statement` | **miss** (missed support) |
+| s09n | In addition, you can not set up custom trace processors to push traces to other destinations (as a replacement, or secondary destination). | conflicting | unrepresentable | `no_axis_for_statement` | **miss** (missed conflict) |
+| s10 | Sometimes, you might want multiple calls to run() to be part of a single trace. | reinforcing | unrepresentable | `no_axis_for_statement` | **miss** (missed support) |
+| s11 | You can use the trace() function to create a trace. | reinforcing | unrepresentable | `no_axis_for_statement` | **miss** (missed support) |
+| s11n | You can not use the trace() function to create a trace. | conflicting | unrepresentable | `no_axis_for_statement` | **miss** (missed conflict) |
+| s12 | You can also manually call trace.start() and trace.finish(). | reinforcing | unrepresentable | `no_axis_for_statement` | **miss** (missed support) |
+| s12n | You can not also manually call trace.start() and trace.finish(). | conflicting | unrepresentable | `no_axis_for_statement` | **miss** (missed conflict) |
 
 ## Reading these
 

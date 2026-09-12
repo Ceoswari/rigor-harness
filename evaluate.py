@@ -73,17 +73,28 @@ def build_claims(focus_terms):
            "fetch_mode": "offline_fixture",
            "fixture_path": os.path.relpath(PAGE, HERE)}
     record = to_source_record(raw)
-    return extract(record["text"], set(focus_terms)), raw["content_sha256"]
+    return (extract(record["text"], set(focus_terms)),
+            compare.source_index(record["text"]),
+            raw["content_sha256"])
 
 
 def score(path):
     with open(path, encoding="utf-8") as fh:
         data = json.load(fh)
-    claims, sha = build_claims(data["focus_terms"])
+    claims, index, sha = build_claims(data["focus_terms"])
     rows, errors, correct, predicted_right, predictions = [], {}, 0, 0, 0
+    declines = {}
     for ref in data["references"]:
-        actual = compare.compare_one(ref, claims)["classification"]
+        result = compare.compare_one(ref, claims, index)
+        actual = result["classification"]
         ok = actual == ref["truth"]
+        if actual in compare.DECLINED:
+            # Declining is usually still a miss: "I cannot express this" is not
+            # the right answer. But it is a different failure from asserting
+            # something false, so it is counted apart rather than hidden. Note
+            # a decline can also be correct, when the reference really is
+            # unrelated to the source.
+            declines[result["reason"]] = declines.get(result["reason"], 0) + 1
         correct += ok
         if ref.get("predicted_system") not in (None, "unknown"):
             predictions += 1
@@ -94,18 +105,24 @@ def score(path):
         rows.append({"id": ref["id"], "statement": ref["statement"],
                      "truth": ref["truth"],
                      "predicted": ref.get("predicted_system", "unknown"),
-                     "actual": actual, "correct": ok, "error_kind": kind})
+                     "actual": actual, "correct": ok, "error_kind": kind,
+                     "reason": result.get("reason")})
     total = len(rows)
     # An "opinion" is any label other than unrelated. Splitting these apart
     # matters: a system that is silent 17 times out of 20 and right when it
     # speaks is a different animal from one that guesses wrong, even though
     # flat accuracy scores them the same.
-    opinions = [r for r in rows if r["actual"] != "unrelated"]
+    opinions = [r for r in rows if r["actual"] in compare.DECIDED]
     opinions_right = sum(1 for r in opinions if r["correct"])
     precision = round(opinions_right / float(len(opinions)), 3) if opinions else None
     return {"total": total, "correct": correct,
             "opinions": len(opinions), "opinions_right": opinions_right,
-            "precision": precision,
+            "precision": precision, "declines": declines,
+            "declined": sum(declines.values()),
+            "declined_right": sum(1 for r in rows
+                                  if r["correct"] and r["actual"] in compare.DECLINED),
+            "wrong_assertions": sum(1 for r in rows
+                                    if not r["correct"] and r["actual"] in compare.DECIDED),
             "accuracy": round(correct / float(total), 3),
             "predictions_made": predictions, "predictions_right": predicted_right,
             "errors": errors, "rows": rows, "source_sha256": sha,
@@ -118,19 +135,24 @@ def render(name, res):
     if res["predictions_made"]:
         lines.append("Advance predictions correct: %d of %d.\n"
                      % (res["predictions_right"], res["predictions_made"]))
+    if res["declines"]:
+        lines.append("Declined to decide, by recorded reason: "
+                     + ", ".join("`%s` %d" % (k, v)
+                                 for k, v in sorted(res["declines"].items())) + ".\n")
     if res["opinions"]:
-        lines.append("It offered an opinion (any label but unrelated) %d times and was right "
+        lines.append("It asserted a relationship %d times and was right "
                      "%d of those, so precision %.0f%% against recall %.0f%%.\n"
                      % (res["opinions"], res["opinions_right"],
                         100 * res["precision"], 100 * res["accuracy"]))
     if res["errors"]:
         lines.append("Errors: " + ", ".join("%s %d" % (k, v)
                                             for k, v in sorted(res["errors"].items())) + ".\n")
-    lines.append("| id | reference | truth | actual | |")
-    lines.append("|---|---|---|---|---|")
+    lines.append("| id | reference | truth | actual | reason | |")
+    lines.append("|---|---|---|---|---|---|")
     for r in res["rows"]:
-        lines.append("| %s | %s | %s | %s | %s |"
+        lines.append("| %s | %s | %s | %s | %s | %s |"
                      % (r["id"], r["statement"].replace("|", "\\|"), r["truth"], r["actual"],
+                        "`%s`" % r["reason"] if r["reason"] else "",
                         "ok" if r["correct"] else "**miss** (%s)" % r["error_kind"]))
     return lines
 
@@ -140,10 +162,13 @@ def main():
     for name, path in SETS:
         results[name] = score(path)
         res = results[name]
-        print("%-8s %2d/%2d correct (%3.0f%%)  opinions %d, right %d  %s"
+        print("%-8s %2d/%2d correct (%3.0f%%)  asserted %d (right %d, wrong %d)  "
+              "declined %d (right %d)"
               % (name, res["correct"], res["total"], 100 * res["accuracy"],
-                 res["opinions"], res["opinions_right"],
-                 ", ".join("%s %d" % (k, v) for k, v in sorted(res["errors"].items()))))
+                 res["opinions"], res["opinions_right"], res["wrong_assertions"],
+                 res["declined"], res["declined_right"]))
+        for reason, count in sorted(res["declines"].items()):
+            print("           declined %-34s %d" % (reason, count))
 
     doc = ["# Evaluation results", "",
            "Measured 2026-09-12 against the September 11 copy of the source page "

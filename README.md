@@ -24,7 +24,7 @@ python3 run.py                    # fetch the live page, classify, verify, repor
 python3 run.py --inject-failure   # prove a failed check is reported, not hidden
 python3 evaluate.py               # measure against both reference sets
 python3 sample_references.py      # regenerate the mechanically sampled set
-python3 -m unittest discover -s tests -v      # 34 tests, no network needed
+python3 -m unittest discover -s tests -v      # 37 tests, no network needed
 ```
 
 `run.py` writes `out/run.json` and `out/report.md`, and exits 0 when verification passes
@@ -48,7 +48,8 @@ Committed samples: `docs/example-report.md` and `docs/evaluation-results.md`.
    the top 8.
 4. `harness/compare.py` classifies each reference against those claims, matching on
    subject and axis, then on polarity, and preferring a claim that shares the reference's
-   own scope.
+   own scope. When it cannot decide, it records which of the three kinds of not-knowing
+   applies rather than reporting them all the same way. See below.
 5. `harness/verify.py` re-derives its checks from the run artifacts and decides whether the
    run is verified.
 6. `harness/report.py` writes the JSON and the Markdown report.
@@ -72,13 +73,44 @@ contradict "tracing is enabled by default", so when a reference is scoped and no
 that axis carries the same scope, the result is `indeterminate` rather than a false
 conflict.
 
+## Three ways of not answering
+
+The first version had one label, `unrelated`, for everything it could not decide. Kevin
+Ng's review caught what that hides, and the sampled evaluation showed the scale: 17 of 20
+references came back `unrelated`, including sentences lifted verbatim off the page the
+system had just read. The page was not silent. The system was, and it was reporting its
+own limitation as a fact about the reference.
+
+That is now three labels, each pointing at a different fix:
+
+| label | meaning | what it implicates |
+|---|---|---|
+| `unrelated` | the source does not discuss this subject anywhere | nothing, this is a correct answer |
+| `unrepresentable` | no predicate axis exists for this statement | the axis vocabulary in `claims.py` |
+| `uncovered` | the page discusses it, but no extracted claim speaks to it | extraction recall, which is bounded at 8 and ranked by a heuristic |
+
+Telling them apart needs something the comparator did not previously have, which is sight
+of the whole page rather than only the claims that survived extraction. That is what
+`compare.source_index()` supplies. Every declining result also carries a machine-readable
+`reason`, and the verifier fails a run where one does not.
+
+**What the split revealed.** The scores did not move, 3 of 14 and 3 of 20, which is the
+honest result: declining with a reason is not a right answer, so it still counts as a miss.
+What changed is the diagnosis. On the sampled set, **all 17 declines are
+`no_axis_for_statement`, and not one is genuinely unrelated.** The bottleneck is the axis
+vocabulary, in one identifiable place, rather than the comparison logic. Across both
+evaluation sets exactly one reference is truly unrelated to the page, and it is the one
+about Kubernetes.
+
 ## Verification
 
 The verifier imports nothing from the extraction or comparison modules, including their
 tokenizer. A verifier that reuses the classifier's own logic cannot catch the classifier's
-own mistakes. It runs 8 checks: provenance present, claim set bounded, every claim verbatim
-in the fetched source, every decided classification citing its source sentence, the
-near-duplicate references actually separated, and the three fixture expectations.
+own mistakes. It runs 10 checks: provenance present, claim set bounded, every claim verbatim in the
+fetched source, every classification that asserts a relationship citing its source
+sentence, every classification that declines recording why, every label being one the
+verifier recognises, the near-duplicate references actually separated, and the three
+fixture expectations.
 
 The grounding check is the one that earns its keep. It re-reads each claim against the
 fetched source text, so a fabricated or paraphrased claim fails the run even when every
@@ -101,24 +133,25 @@ page, taken verbatim as a reference the page cannot disagree with, plus a copy w
 inserted after the first auxiliary. No judgement about which sentences were chosen, so it
 measures the task rather than my sense of the system's weak points.
 
-| | correct | opinions offered | opinions right |
-|---|---|---|---|
-| Stress set | 3 of 14 (21%) | 9 | 2 |
-| Sampled set | 3 of 20 (15%) | 3 | 3 |
+| | correct | asserted | asserted right | declined |
+|---|---|---|---|---|
+| Stress set | 3 of 14 (21%) | 7 | 2 | 7 (1 correct) |
+| Sampled set | 3 of 20 (15%) | 3 | 3 | 17 (0 correct) |
 
-The flat accuracy is nearly the same and it hides the real difference. An opinion here
-means any label other than unrelated.
+The flat accuracy is nearly the same and it hides the real difference. An assertion is a
+label claiming a relationship: reinforcing, conflicting or distinct.
 
 **On sentences picked to break it, it answers confidently and wrongly.** Nine opinions,
 two right, including three false conflicts. A false conflict is the expensive error,
 because it sends a reader to re-check a source that was correct.
 
-**On sentences drawn without bias, it barely answers at all.** Three opinions out of
-twenty, and all three correct. Seventeen times it returns unrelated, including for
-sentences lifted verbatim off the page it just read.
+**On sentences drawn without bias, it barely answers at all.** Three assertions out of
+twenty, and all three correct. Seventeen times it declines, every one of them because the
+statement sits on no axis it can express, including sentences lifted verbatim off the page
+it just read.
 
-So the honest characterization is not that the comparator is inaccurate. It is that its
-coverage is narrow and its confidence is miscalibrated at the edges. It has an opinion
+So the honest characterization is that its coverage is narrow and its confidence is
+miscalibrated at the edges, rather than that it is inaccurate. It has an opinion
 only when a sentence lands on one of four predicate axes hand-listed in
 `harness/claims.py`, which most prose does not. When it stays inside that envelope it is
 reliable. When pushed outside it, it does not fall silent, it guesses.
@@ -226,9 +259,13 @@ Sentence splitting is tuned for documentation pages rather than prose. Materiali
 a heuristic, and the September 11 drift showed that a bounded set plus a heuristic ranking is
 where this design is most fragile.
 
-**What I would build next, in order.** Replace the comparator with an NLI cross-encoder while
-keeping the deterministic verifier unchanged, and measure it against both sets, where it has
-to beat 3 of 14 and 3 of 20. Add a decontextualization stage so claims stand alone. Schedule
+**What I would build next, in order.** The `unrelated` split described above is done, and it
+was the first item. Next is a coverage number in the verifier: the run should report what
+share of the page's material sentences it could not represent at all, because right now the
+verifier checks whether its answers are correct and never counts what it declined to say,
+which is exactly how this got past me. Then replace the comparator with an NLI cross-encoder
+while keeping the deterministic verifier unchanged, and measure it against both sets, where
+it has to beat 3 of 14 and 3 of 20. Add a decontextualization stage so claims stand alone. Schedule
 the run so upstream drift is caught on a cadence rather than by accident, and diff claims
 between revisions so the report says what changed rather than only that the hash changed.
 
@@ -246,7 +283,7 @@ harness/report.py           JSON and Markdown output
 fixtures/references.json    the three pilot references and their expectations
 fixtures/heldout.json       14 stress references with truth and advance predictions
 fixtures/sampled.json       20 references generated mechanically from the page
-tests/                      34 tests, two saved copies of the source page
+tests/                      37 tests, two saved copies of the source page
 REUSE_SCAN.md               the current-state scan, with benchmarks and sources
 docs/example-report.md      committed sample of the human-readable output
 docs/evaluation-results.md  committed scorecards for both sets

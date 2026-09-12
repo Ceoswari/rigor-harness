@@ -41,7 +41,8 @@ def build_run():
     data = load_fixtures()
     record = to_source_record(build_raw())
     claims = extract(record["text"], set(data["focus_terms"]))
-    comparisons = compare.compare_all(data["references"], claims)
+    comparisons = compare.compare_all(data["references"], claims,
+                                      compare.source_index(record["text"]))
     return {"source": record, "claims": claims, "comparisons": comparisons,
             "limitations": []}, data
 

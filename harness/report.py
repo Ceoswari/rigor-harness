@@ -3,7 +3,8 @@ import json
 import os
 from typing import Dict
 
-LABEL_ORDER = ["conflicting", "indeterminate", "distinct", "reinforcing", "unrelated"]
+LABEL_ORDER = ["conflicting", "indeterminate", "distinct", "reinforcing",
+               "uncovered", "unrepresentable", "unrelated"]
 
 
 def write_json(run: Dict, verification: Dict, path: str) -> str:
@@ -55,6 +56,9 @@ def write_markdown(run: Dict, verification: Dict, path: str) -> str:
         lines.append("> %s" % comp["reference_statement"])
         lines.append("")
         lines.append("%s" % comp["rationale"])
+        if comp.get("reason"):
+            lines.append("")
+            lines.append("Reason: `%s`" % comp["reason"])
         if comp.get("evidence"):
             lines.append("")
             lines.append("Evidence (%s): %s"

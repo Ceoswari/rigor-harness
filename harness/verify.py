@@ -22,6 +22,14 @@ def content_tokens(text: str) -> set:
             if t not in _STOP and len(t) > 1}
 
 
+# Deliberately duplicated rather than imported from harness.compare. This
+# module's whole value is that it does not share code with the pipeline it
+# checks, so it carries its own copy of the label vocabulary and will fail
+# loudly if the comparator starts emitting labels this list has never heard of.
+DECIDING_LABELS = ("reinforcing", "conflicting", "distinct")
+DECLINING_LABELS = ("indeterminate", "unrelated", "unrepresentable", "uncovered")
+
+
 def _check(check_id: str, passed: bool, detail: str) -> Dict:
     return {"check": check_id, "passed": bool(passed), "detail": detail}
 
@@ -56,12 +64,34 @@ def verify(run: Dict, expectations: List[Dict]) -> Dict:
         "Every extracted claim sentence appears verbatim in the fetched source text.",
     ))
 
-    decided = [c for c in comparisons if c["classification"] != "unrelated"]
+    decided = [c for c in comparisons if c["classification"] in DECIDING_LABELS]
     cited = all(c.get("evidence") and c["evidence"].get("source_sentence") for c in decided)
     checks.append(_check(
         "classifications_cite_evidence",
         cited,
-        "Every non-unrelated classification names the source sentence behind it.",
+        "Every classification asserting a relationship names the source sentence "
+        "behind it (%d of %d comparisons assert one)." % (len(decided), len(comparisons)),
+    ))
+
+    # A declined result has to say which kind of not-knowing it is. Collapsing
+    # them into one bare label is the defect this check exists to prevent:
+    # "the source says nothing about this" and "the system cannot express
+    # this" were reported identically until Sep 12 2026.
+    declined = [c for c in comparisons if c["classification"] in DECLINING_LABELS]
+    reasoned = all(c.get("reason") for c in declined)
+    checks.append(_check(
+        "declined_results_name_a_reason",
+        reasoned,
+        "Every comparison that declines to decide records why (%d of %d declined)."
+        % (len(declined), len(comparisons)),
+    ))
+
+    known = all(c["classification"] in DECIDING_LABELS + DECLINING_LABELS
+                for c in comparisons)
+    checks.append(_check(
+        "labels_are_in_the_known_vocabulary",
+        known,
+        "Every classification is one the verifier recognises.",
     ))
 
     # Re-derive what a surface-similarity baseline would conclude.

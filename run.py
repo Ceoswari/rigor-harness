@@ -70,7 +70,11 @@ def main(argv=None):
 
     focus = set(fixture_data.get("focus_terms", []))
     claims = extract(upsert["record"]["text"], focus)
-    comparisons = compare.compare_all(fixture_data["references"], claims)
+    # The comparator needs sight of the whole page, not just the claims that
+    # survived extraction, to tell "the source never mentions this" apart from
+    # "extraction missed it".
+    index = compare.source_index(upsert["record"]["text"])
+    comparisons = compare.compare_all(fixture_data["references"], claims, index)
 
     expectations = list(fixture_data["expectations"])
     if args.inject_failure:

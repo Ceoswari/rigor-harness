@@ -5,7 +5,7 @@
 ## Source
 
 - URL: https://openai.github.io/openai-agents-python/tracing/
-- Fetched: 2026-09-11T22:15:28Z (HTTP 200)
+- Fetched: 2026-09-12T18:11:43Z (HTTP 200)
 - Content SHA-256: `816bf4a4d7b207d3`
 - Revision count: 1
 
@@ -42,16 +42,20 @@ Evidence (clm_02): Tracing is enabled by default.
 
 > The billing subsystem retries failed invoice exports every six hours.
 
-No comparable proposition and no material subject overlap.
+The source does not discuss this subject, and the reference states no claim on a comparable axis.
+
+Reason: `subject_absent_from_source`
 
 ## Verification
 
-All 8 verification checks passed.
+All 10 verification checks passed.
 
 - [PASS] **provenance_present** Source record carries url, content hash and first-seen timestamp.
 - [PASS] **claims_bounded** Extracted 8 claims; a bounded set is 1-12.
 - [PASS] **claims_grounded_in_source** Every extracted claim sentence appears verbatim in the fetched source text.
-- [PASS] **classifications_cite_evidence** Every non-unrelated classification names the source sentence behind it.
+- [PASS] **classifications_cite_evidence** Every classification asserting a relationship names the source sentence behind it (2 of 3 comparisons assert one).
+- [PASS] **declined_results_name_a_reason** Every comparison that declines to decide records why (1 of 3 declined).
+- [PASS] **labels_are_in_the_known_vocabulary** Every classification is one the verifier recognises.
 - [PASS] **beats_naive_overlap_baseline** Near-duplicate references separated by classification (ref_a/ref_b overlap 0.83 -> reinforcing vs conflicting). A surface-similarity comparator scores these pairs as the same statement and cannot split them.
 - [PASS] **expectation_ref_a** Expected 'reinforcing' for ref_a, got 'reinforcing'.
 - [PASS] **expectation_ref_b** Expected 'conflicting' for ref_b, got 'conflicting'.
