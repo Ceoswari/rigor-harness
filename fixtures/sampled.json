@@ -1,0 +1,248 @@
+{
+  "note": "Mechanically sampled from the source page by sample_references.py. No judgement was applied to which sentences were chosen, so this measures the task rather than the system's known weak points. Compare against fixtures/heldout.json, which is a stress set.",
+  "procedure": {
+    "stride": 3,
+    "limit": 12,
+    "length_range": [
+      40,
+      200
+    ],
+    "page": "fixture_tracing_page_2026-09-11.html"
+  },
+  "focus_terms": [
+    "tracing",
+    "traces",
+    "trace",
+    "spans",
+    "span",
+    "sdk",
+    "agents",
+    "sensitive",
+    "data",
+    "workflow"
+  ],
+  "references": [
+    {
+      "id": "s01",
+      "statement": "The Agents SDK includes built-in tracing, collecting a comprehensive record of events during an agent run: LLM generations, tool calls, handoffs, guardrails, and even custom events that occur.",
+      "truth": "reinforcing",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from the source page."
+    },
+    {
+      "id": "s02",
+      "statement": "You can globally disable tracing in code with set_tracing_disabled(True)",
+      "truth": "reinforcing",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from the source page."
+    },
+    {
+      "id": "s02n",
+      "statement": "You can not globally disable tracing in code with set_tracing_disabled(True)",
+      "truth": "conflicting",
+      "predicted_system": "unknown",
+      "why": "Same sentence with 'not' inserted after the first auxiliary."
+    },
+    {
+      "id": "s03",
+      "statement": "Traces represent a single end-to-end operation of a \"workflow\".",
+      "truth": "reinforcing",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from the source page."
+    },
+    {
+      "id": "s04",
+      "statement": "For example, AgentSpanData contains information about the Agent, GenerationSpanData contains information about the LLM generation, etc.",
+      "truth": "reinforcing",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from the source page."
+    },
+    {
+      "id": "s05",
+      "statement": "Each model turn is wrapped in a turn_span().",
+      "truth": "reinforcing",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from the source page."
+    },
+    {
+      "id": "s05n",
+      "statement": "Each model turn is not wrapped in a turn_span().",
+      "truth": "conflicting",
+      "predicted_system": "unknown",
+      "why": "Same sentence with 'not' inserted after the first auxiliary."
+    },
+    {
+      "id": "s06",
+      "statement": "Function tool calls are each wrapped in function_span()",
+      "truth": "reinforcing",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from the source page."
+    },
+    {
+      "id": "s06n",
+      "statement": "Function tool calls are not each wrapped in function_span()",
+      "truth": "conflicting",
+      "predicted_system": "unknown",
+      "why": "Same sentence with 'not' inserted after the first auxiliary."
+    },
+    {
+      "id": "s07",
+      "statement": "Audio outputs (text-to-speech) are wrapped in a speech_span()",
+      "truth": "reinforcing",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from the source page."
+    },
+    {
+      "id": "s07n",
+      "statement": "Audio outputs (text-to-speech) are not wrapped in a speech_span()",
+      "truth": "conflicting",
+      "predicted_system": "unknown",
+      "why": "Same sentence with 'not' inserted after the first auxiliary."
+    },
+    {
+      "id": "s08",
+      "statement": "You can set this name if you use trace, or you can configure the name and other properties with the RunConfig.",
+      "truth": "reinforcing",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from the source page."
+    },
+    {
+      "id": "s08n",
+      "statement": "You can not set this name if you use trace, or you can configure the name and other properties with the RunConfig.",
+      "truth": "conflicting",
+      "predicted_system": "unknown",
+      "why": "Same sentence with 'not' inserted after the first auxiliary."
+    },
+    {
+      "id": "s09",
+      "statement": "In addition, you can set up custom trace processors to push traces to other destinations (as a replacement, or secondary destination).",
+      "truth": "reinforcing",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from the source page."
+    },
+    {
+      "id": "s09n",
+      "statement": "In addition, you can not set up custom trace processors to push traces to other destinations (as a replacement, or secondary destination).",
+      "truth": "conflicting",
+      "predicted_system": "unknown",
+      "why": "Same sentence with 'not' inserted after the first auxiliary."
+    },
+    {
+      "id": "s10",
+      "statement": "Sometimes, you might want multiple calls to run() to be part of a single trace.",
+      "truth": "reinforcing",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from the source page."
+    },
+    {
+      "id": "s11",
+      "statement": "You can use the trace() function to create a trace.",
+      "truth": "reinforcing",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from the source page."
+    },
+    {
+      "id": "s11n",
+      "statement": "You can not use the trace() function to create a trace.",
+      "truth": "conflicting",
+      "predicted_system": "unknown",
+      "why": "Same sentence with 'not' inserted after the first auxiliary."
+    },
+    {
+      "id": "s12",
+      "statement": "You can also manually call trace.start() and trace.finish().",
+      "truth": "reinforcing",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from the source page."
+    },
+    {
+      "id": "s12n",
+      "statement": "You can not also manually call trace.start() and trace.finish().",
+      "truth": "conflicting",
+      "predicted_system": "unknown",
+      "why": "Same sentence with 'not' inserted after the first auxiliary."
+    }
+  ],
+  "expectations": [
+    {
+      "reference_id": "s01",
+      "expected": "reinforcing"
+    },
+    {
+      "reference_id": "s02",
+      "expected": "reinforcing"
+    },
+    {
+      "reference_id": "s02n",
+      "expected": "conflicting"
+    },
+    {
+      "reference_id": "s03",
+      "expected": "reinforcing"
+    },
+    {
+      "reference_id": "s04",
+      "expected": "reinforcing"
+    },
+    {
+      "reference_id": "s05",
+      "expected": "reinforcing"
+    },
+    {
+      "reference_id": "s05n",
+      "expected": "conflicting"
+    },
+    {
+      "reference_id": "s06",
+      "expected": "reinforcing"
+    },
+    {
+      "reference_id": "s06n",
+      "expected": "conflicting"
+    },
+    {
+      "reference_id": "s07",
+      "expected": "reinforcing"
+    },
+    {
+      "reference_id": "s07n",
+      "expected": "conflicting"
+    },
+    {
+      "reference_id": "s08",
+      "expected": "reinforcing"
+    },
+    {
+      "reference_id": "s08n",
+      "expected": "conflicting"
+    },
+    {
+      "reference_id": "s09",
+      "expected": "reinforcing"
+    },
+    {
+      "reference_id": "s09n",
+      "expected": "conflicting"
+    },
+    {
+      "reference_id": "s10",
+      "expected": "reinforcing"
+    },
+    {
+      "reference_id": "s11",
+      "expected": "reinforcing"
+    },
+    {
+      "reference_id": "s11n",
+      "expected": "conflicting"
+    },
+    {
+      "reference_id": "s12",
+      "expected": "reinforcing"
+    },
+    {
+      "reference_id": "s12n",
+      "expected": "conflicting"
+    }
+  ]
+}

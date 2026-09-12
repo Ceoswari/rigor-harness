@@ -1,0 +1,66 @@
+# Evaluation results
+
+Measured 2026-09-12 against the September 11 copy of the source page (SHA-256 `816bf4a4d7b207d3`).
+
+Two sets, because one number on its own would mislead. The stress set was written by me, knowing the implementation, choosing cases likely to break it. The sampled set was generated from the page by a fixed mechanical rule with no judgement about which sentences were chosen. Reproduce both with `python3 evaluate.py`.
+
+
+## Stress set: 3 of 14 correct (21%)
+
+Advance predictions correct: 9 of 14.
+
+It offered an opinion (any label but unrelated) 9 times and was right 2 of those, so precision 22% against recall 21%.
+
+Errors: false conflict 3, missed conflict 2, missed support 6.
+
+| id | reference | truth | actual | |
+|---|---|---|---|---|
+| h01 | Agents SDK tracing is turned on unless you disable it. | reinforcing | conflicting | **miss** (false conflict) |
+| h02 | Tracing is unavailable for organizations that use OpenAI's APIs under a Zero Data Retention policy. | reinforcing | distinct | **miss** (missed support) |
+| h03 | Sensitive data capture cannot be disabled in the Agents SDK. | conflicting | unrelated | **miss** (missed conflict) |
+| h04 | The trace_include_sensitive_data setting is True by default. | reinforcing | distinct | **miss** (missed support) |
+| h05 | You can disable tracing for one run using RunConfig. | reinforcing | conflicting | **miss** (false conflict) |
+| h06 | Tracing must be enabled manually before it will record anything. | conflicting | reinforcing | **miss** (missed conflict) |
+| h07 | Kubernetes pods are evicted when a node runs out of memory. | unrelated | unrelated | ok |
+| h08 | Traces are composed of spans. | reinforcing | unrelated | **miss** (missed support) |
+| h09 | Tracing is disabled by default for organizations with Zero Data Retention. | indeterminate | conflicting | **miss** (false conflict) |
+| h10 | Custom trace processors can push traces to other destinations. | reinforcing | unrelated | **miss** (missed support) |
+| h11 | Tracing is enabled by default in the Agents SDK, so no setup is required. | reinforcing | reinforcing | ok |
+| h12 | The SDK records spans for guardrails. | reinforcing | distinct | **miss** (missed support) |
+| h13 | Audio span data is captured by default. | reinforcing | unrelated | **miss** (missed support) |
+| h14 | Tracing cannot be disabled globally. | conflicting | conflicting | ok |
+
+## Sampled set: 3 of 20 correct (15%)
+
+It offered an opinion (any label but unrelated) 3 times and was right 3 of those, so precision 100% against recall 15%.
+
+Errors: missed conflict 7, missed support 10.
+
+| id | reference | truth | actual | |
+|---|---|---|---|---|
+| s01 | The Agents SDK includes built-in tracing, collecting a comprehensive record of events during an agent run: LLM generations, tool calls, handoffs, guardrails, and even custom events that occur. | reinforcing | reinforcing | ok |
+| s02 | You can globally disable tracing in code with set_tracing_disabled(True) | reinforcing | reinforcing | ok |
+| s02n | You can not globally disable tracing in code with set_tracing_disabled(True) | conflicting | conflicting | ok |
+| s03 | Traces represent a single end-to-end operation of a "workflow". | reinforcing | unrelated | **miss** (missed support) |
+| s04 | For example, AgentSpanData contains information about the Agent, GenerationSpanData contains information about the LLM generation, etc. | reinforcing | unrelated | **miss** (missed support) |
+| s05 | Each model turn is wrapped in a turn_span(). | reinforcing | unrelated | **miss** (missed support) |
+| s05n | Each model turn is not wrapped in a turn_span(). | conflicting | unrelated | **miss** (missed conflict) |
+| s06 | Function tool calls are each wrapped in function_span() | reinforcing | unrelated | **miss** (missed support) |
+| s06n | Function tool calls are not each wrapped in function_span() | conflicting | unrelated | **miss** (missed conflict) |
+| s07 | Audio outputs (text-to-speech) are wrapped in a speech_span() | reinforcing | unrelated | **miss** (missed support) |
+| s07n | Audio outputs (text-to-speech) are not wrapped in a speech_span() | conflicting | unrelated | **miss** (missed conflict) |
+| s08 | You can set this name if you use trace, or you can configure the name and other properties with the RunConfig. | reinforcing | unrelated | **miss** (missed support) |
+| s08n | You can not set this name if you use trace, or you can configure the name and other properties with the RunConfig. | conflicting | unrelated | **miss** (missed conflict) |
+| s09 | In addition, you can set up custom trace processors to push traces to other destinations (as a replacement, or secondary destination). | reinforcing | unrelated | **miss** (missed support) |
+| s09n | In addition, you can not set up custom trace processors to push traces to other destinations (as a replacement, or secondary destination). | conflicting | unrelated | **miss** (missed conflict) |
+| s10 | Sometimes, you might want multiple calls to run() to be part of a single trace. | reinforcing | unrelated | **miss** (missed support) |
+| s11 | You can use the trace() function to create a trace. | reinforcing | unrelated | **miss** (missed support) |
+| s11n | You can not use the trace() function to create a trace. | conflicting | unrelated | **miss** (missed conflict) |
+| s12 | You can also manually call trace.start() and trace.finish(). | reinforcing | unrelated | **miss** (missed support) |
+| s12n | You can not also manually call trace.start() and trace.finish(). | conflicting | unrelated | **miss** (missed conflict) |
+
+## Reading these
+
+A false conflict is the expensive error: it sends a reader to re-check a source that was right. A missed reinforcement is the cheap one: the system fails to notice agreement and stays quiet. The sampled set is dominated by missed reinforcements, which says the system is more often silent than wrong.
+
+The gap between the two sets is the useful part. On sentences chosen to break it, the comparator produces confident wrong answers including false conflicts. On sentences drawn without bias, it mostly declines to answer at all. Its real coverage is narrow: it has an opinion only when a sentence lands on one of the four predicate axes declared in harness/claims.py.
