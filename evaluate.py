@@ -174,21 +174,34 @@ def configurations(which):
     if which in ("nli", "all"):
         from harness import nli
         comparator = nli.NliComparator()
-        text = page_text()
-        focus = set(json.load(open(SETS[0][1], encoding="utf-8"))["focus_terms"])
+        record = page_record()
+        text, title = record["text"], record["title"]
+        with open(SETS[0][1], encoding="utf-8") as fh:
+            focus = set(json.load(fh)["focus_terms"])
         sentences = nli.material_sentences(text, focus)
-        configs.append(("nli-claims", lambda ref, claims, index:
-                        comparator.compare_one(ref, claims, index)))
-        configs.append(("nli-material", lambda ref, claims, index:
-                        comparator.compare_one(ref, claims, index, sentences)))
-        print("nli backend: %s, %d material sentences in scope\n"
-              % (comparator.model_name, len(sentences)))
+
+        def configured(scope_sentences, fixes):
+            # One loaded model, with the two fixes toggled per configuration.
+            # "raw" must reproduce the numbers measured before the fixes were
+            # written, which is a check that nothing else changed.
+            def fn(ref, claims, index):
+                comparator.decontextualize = fixes
+                comparator.gate_contradictions = fixes
+                return comparator.compare_one(ref, claims, index, scope_sentences, title)
+            return fn
+
+        configs.append(("nli-claims", configured(None, False)))
+        configs.append(("nli-material", configured(sentences, False)))
+        configs.append(("nli-claims-fixed", configured(None, True)))
+        configs.append(("nli-material-fixed", configured(sentences, True)))
+        print("nli backend: %s, %d material sentences in scope, title %r\n"
+              % (comparator.model_name, len(sentences), title))
     if which == "nli":
         configs = [c for c in configs if c[0] != "rules"] or configs
     return configs
 
 
-def page_text():
+def page_record():
     with open(PAGE, "rb") as fh:
         body = fh.read()
     raw = {"url": URL, "http_status": None, "fetched_at": "evaluation",
@@ -196,7 +209,7 @@ def page_text():
            "content_length": len(body), "etag": None, "last_modified": None,
            "content_type": "text/html", "_body": body,
            "fetch_mode": "offline_fixture", "fixture_path": "tests/"}
-    return to_source_record(raw)["text"]
+    return to_source_record(raw)
 
 
 def main():
@@ -212,7 +225,7 @@ def main():
         for name, path in SETS:
             results["%s/%s" % (config_name, name)] = score(path, fn)
             res = results["%s/%s" % (config_name, name)]
-            print("%-14s %-8s %2d/%2d correct (%3.0f%%)  asserted %d (right %d, wrong %d)"
+            print("%-19s %-8s %2d/%2d correct (%3.0f%%)  asserted %d (right %d, wrong %d)"
                   "  declined %d (right %d)"
                   % (config_name, name, res["correct"], res["total"],
                      100 * res["accuracy"], res["opinions"], res["opinions_right"],

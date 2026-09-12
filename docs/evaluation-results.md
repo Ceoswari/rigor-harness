@@ -16,6 +16,12 @@ Two sets, because one number on its own would mislead. The stress set was writte
 | `nli-material` | stress | 8 of 14 (57%) | 14 | 8 | 0 |
 | `nli-material` | sampled | 14 of 20 (70%) | 20 | 14 | 0 |
 | `nli-material` | v2 | 15 of 28 (54%) | 26 | 13 | 2 |
+| `nli-claims-fixed` | stress | 6 of 14 (43%) | 5 | 5 | 9 |
+| `nli-claims-fixed` | sampled | 4 of 20 (20%) | 5 | 4 | 15 |
+| `nli-claims-fixed` | v2 | 10 of 28 (36%) | 2 | 2 | 26 |
+| `nli-material-fixed` | stress | 10 of 14 (71%) | 12 | 10 | 2 |
+| `nli-material-fixed` | sampled | 16 of 20 (80%) | 20 | 16 | 0 |
+| `nli-material-fixed` | v2 | 25 of 28 (89%) | 22 | 19 | 6 |
 
 
 ## rules/stress: 3 of 14 correct (21%)
@@ -304,6 +310,198 @@ Errors: false conflict 13.
 | u06 | Debugging information is written to sys.stdout. | unrelated | conflicting |  | **miss** (false conflict) |
 | u07 | Positional and keyword arguments are passed through to io.TextIOWrapper (except buffer, which is implied by the context). | unrelated | unrelated | `model_found_no_relation` | ok |
 | u08 | Changed in version 3.6.2: The filename parameter accepts a path-like object. | unrelated | conflicting |  | **miss** (false conflict) |
+
+## nli-claims-fixed/stress: 6 of 14 correct (43%)
+
+Advance predictions correct: 4 of 14.
+
+Declined to decide, by recorded reason: `model_found_no_relation` 1, `subject_present_but_not_extracted` 8.
+
+It asserted a relationship 5 times and was right 5 of those, so precision 100% against recall 43%.
+
+Errors: missed conflict 1, missed support 6, other 1.
+
+| id | reference | truth | actual | reason | |
+|---|---|---|---|---|---|
+| h01 | Agents SDK tracing is turned on unless you disable it. | reinforcing | reinforcing |  | ok |
+| h02 | Tracing is unavailable for organizations that use OpenAI's APIs under a Zero Data Retention policy. | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| h03 | Sensitive data capture cannot be disabled in the Agents SDK. | conflicting | conflicting |  | ok |
+| h04 | The trace_include_sensitive_data setting is True by default. | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| h05 | You can disable tracing for one run using RunConfig. | reinforcing | reinforcing |  | ok |
+| h06 | Tracing must be enabled manually before it will record anything. | conflicting | uncovered | `subject_present_but_not_extracted` | **miss** (missed conflict) |
+| h07 | Kubernetes pods are evicted when a node runs out of memory. | unrelated | unrelated | `model_found_no_relation` | ok |
+| h08 | Traces are composed of spans. | reinforcing | reinforcing |  | ok |
+| h09 | Tracing is disabled by default for organizations with Zero Data Retention. | indeterminate | uncovered | `subject_present_but_not_extracted` | **miss** (other) |
+| h10 | Custom trace processors can push traces to other destinations. | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| h11 | Tracing is enabled by default in the Agents SDK, so no setup is required. | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| h12 | The SDK records spans for guardrails. | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| h13 | Audio span data is captured by default. | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| h14 | Tracing cannot be disabled globally. | conflicting | conflicting |  | ok |
+
+## nli-claims-fixed/sampled: 4 of 20 correct (20%)
+
+Declined to decide, by recorded reason: `subject_present_but_not_extracted` 15.
+
+It asserted a relationship 5 times and was right 4 of those, so precision 80% against recall 20%.
+
+Errors: missed conflict 7, missed support 9.
+
+| id | reference | truth | actual | reason | |
+|---|---|---|---|---|---|
+| s01 | The Agents SDK includes built-in tracing, collecting a comprehensive record of events during an agent run: LLM generations, tool calls, handoffs, guardrails, and even custom events that occur. | reinforcing | reinforcing |  | ok |
+| s02 | You can globally disable tracing in code with set_tracing_disabled(True) | reinforcing | reinforcing |  | ok |
+| s02n | You can not globally disable tracing in code with set_tracing_disabled(True) | conflicting | conflicting |  | ok |
+| s03 | Traces represent a single end-to-end operation of a "workflow". | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| s04 | For example, AgentSpanData contains information about the Agent, GenerationSpanData contains information about the LLM generation, etc. | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| s05 | Each model turn is wrapped in a turn_span(). | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| s05n | Each model turn is not wrapped in a turn_span(). | conflicting | uncovered | `subject_present_but_not_extracted` | **miss** (missed conflict) |
+| s06 | Function tool calls are each wrapped in function_span() | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| s06n | Function tool calls are not each wrapped in function_span() | conflicting | reinforcing |  | **miss** (missed conflict) |
+| s07 | Audio outputs (text-to-speech) are wrapped in a speech_span() | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| s07n | Audio outputs (text-to-speech) are not wrapped in a speech_span() | conflicting | uncovered | `subject_present_but_not_extracted` | **miss** (missed conflict) |
+| s08 | You can set this name if you use trace, or you can configure the name and other properties with the RunConfig. | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| s08n | You can not set this name if you use trace, or you can configure the name and other properties with the RunConfig. | conflicting | uncovered | `subject_present_but_not_extracted` | **miss** (missed conflict) |
+| s09 | In addition, you can set up custom trace processors to push traces to other destinations (as a replacement, or secondary destination). | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| s09n | In addition, you can not set up custom trace processors to push traces to other destinations (as a replacement, or secondary destination). | conflicting | uncovered | `subject_present_but_not_extracted` | **miss** (missed conflict) |
+| s10 | Sometimes, you might want multiple calls to run() to be part of a single trace. | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| s11 | You can use the trace() function to create a trace. | reinforcing | reinforcing |  | ok |
+| s11n | You can not use the trace() function to create a trace. | conflicting | uncovered | `subject_present_but_not_extracted` | **miss** (missed conflict) |
+| s12 | You can also manually call trace.start() and trace.finish(). | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| s12n | You can not also manually call trace.start() and trace.finish(). | conflicting | uncovered | `subject_present_but_not_extracted` | **miss** (missed conflict) |
+
+## nli-claims-fixed/v2: 10 of 28 correct (36%)
+
+Declined to decide, by recorded reason: `model_found_no_relation` 8, `subject_present_but_not_extracted` 18.
+
+It asserted a relationship 2 times and was right 2 of those, so precision 100% against recall 36%.
+
+Errors: missed conflict 7, missed support 11.
+
+| id | reference | truth | actual | reason | |
+|---|---|---|---|---|---|
+| v01 | Using the Traces dashboard, you can debug, visualize, and monitor your workflows during development and in production. | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| v01n | Using the Traces dashboard, you can not debug, visualize, and monitor your workflows during development and in production. | conflicting | uncovered | `subject_present_but_not_extracted` | **miss** (missed conflict) |
+| v02 | You can disable tracing for a single run by setting agents.run.RunConfig.tracing_disabled to True | reinforcing | reinforcing |  | ok |
+| v02n | You can not disable tracing for a single run by setting agents.run.RunConfig.tracing_disabled to True | conflicting | conflicting |  | ok |
+| v03 | Must have the format trace_<32_alphanumeric>. | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| v04 | The entire Runner.{run, run_sync, run_streamed}() is wrapped in a trace(). | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| v04n | The entire Runner.{run, run_sync, run_streamed}() is not wrapped in a trace(). | conflicting | uncovered | `subject_present_but_not_extracted` | **miss** (missed conflict) |
+| v05 | Each time an agent runs, it is wrapped in agent_span() | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| v05n | Each time an agent runs, it is not wrapped in agent_span() | conflicting | uncovered | `subject_present_but_not_extracted` | **miss** (missed conflict) |
+| v06 | Guardrails are wrapped in guardrail_span() | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| v06n | Guardrails are not wrapped in guardrail_span() | conflicting | uncovered | `subject_present_but_not_extracted` | **miss** (missed conflict) |
+| v07 | The SDK may parent related audio spans under a speech_group_span() | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| v07n | The SDK may not parent related audio spans under a speech_group_span() | conflicting | uncovered | `subject_present_but_not_extracted` | **miss** (missed conflict) |
+| v08 | If you want a more compact hierarchy, disable the automatic task and turn spans for a run. | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| v09 | The default BatchTraceProcessor exports traces in the background every few seconds, or sooner when the in-memory queue reaches its size trigger, and also performs a final flush when the process exits. | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| v10 | You can do this by wrapping the entire code in a trace(). | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| v10n | You can not do this by wrapping the entire code in a trace(). | conflicting | uncovered | `subject_present_but_not_extracted` | **miss** (missed conflict) |
+| v11 | Recommended: use the trace as a context manager, i.e. with trace(...) as my_trace. | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| v12 | The current trace is tracked via a Python contextvar. | reinforcing | uncovered | `subject_present_but_not_extracted` | **miss** (missed support) |
+| v12n | The current trace is not tracked via a Python contextvar. | conflicting | uncovered | `subject_present_but_not_extracted` | **miss** (missed conflict) |
+| u01 | The ZIP file format is a common archive and compression standard. | unrelated | unrelated | `model_found_no_relation` | ok |
+| u02 | This requires the compression.zstd module. | unrelated | unrelated | `model_found_no_relation` | ok |
+| u03 | This attribute is a workaround for legacy implementations which produce archives with names in the current locale encoding or code page (mostly on Windows). | unrelated | unrelated | `model_found_no_relation` | ok |
+| u04 | Use io.TextIOWrapper for reading compressed text files in universal newlines mode. | unrelated | unrelated | `model_found_no_relation` | ok |
+| u05 | ZipFile.write(filename, arcname=None, compress_type=None, compresslevel=None)¶ | unrelated | unrelated | `model_found_no_relation` | ok |
+| u06 | Debugging information is written to sys.stdout. | unrelated | unrelated | `model_found_no_relation` | ok |
+| u07 | Positional and keyword arguments are passed through to io.TextIOWrapper (except buffer, which is implied by the context). | unrelated | unrelated | `model_found_no_relation` | ok |
+| u08 | Changed in version 3.6.2: The filename parameter accepts a path-like object. | unrelated | unrelated | `model_found_no_relation` | ok |
+
+## nli-material-fixed/stress: 10 of 14 correct (71%)
+
+Advance predictions correct: 5 of 14.
+
+Declined to decide, by recorded reason: `model_found_no_relation` 2.
+
+It asserted a relationship 12 times and was right 10 of those, so precision 83% against recall 71%.
+
+Errors: false conflict 1, missed conflict 1, other 2.
+
+| id | reference | truth | actual | reason | |
+|---|---|---|---|---|---|
+| h01 | Agents SDK tracing is turned on unless you disable it. | reinforcing | conflicting |  | **miss** (false conflict) |
+| h02 | Tracing is unavailable for organizations that use OpenAI's APIs under a Zero Data Retention policy. | reinforcing | reinforcing |  | ok |
+| h03 | Sensitive data capture cannot be disabled in the Agents SDK. | conflicting | conflicting |  | ok |
+| h04 | The trace_include_sensitive_data setting is True by default. | reinforcing | reinforcing |  | ok |
+| h05 | You can disable tracing for one run using RunConfig. | reinforcing | reinforcing |  | ok |
+| h06 | Tracing must be enabled manually before it will record anything. | conflicting | unrelated | `model_found_no_relation` | **miss** (missed conflict) |
+| h07 | Kubernetes pods are evicted when a node runs out of memory. | unrelated | reinforcing |  | **miss** (other) |
+| h08 | Traces are composed of spans. | reinforcing | reinforcing |  | ok |
+| h09 | Tracing is disabled by default for organizations with Zero Data Retention. | indeterminate | unrelated | `model_found_no_relation` | **miss** (other) |
+| h10 | Custom trace processors can push traces to other destinations. | reinforcing | reinforcing |  | ok |
+| h11 | Tracing is enabled by default in the Agents SDK, so no setup is required. | reinforcing | reinforcing |  | ok |
+| h12 | The SDK records spans for guardrails. | reinforcing | reinforcing |  | ok |
+| h13 | Audio span data is captured by default. | reinforcing | reinforcing |  | ok |
+| h14 | Tracing cannot be disabled globally. | conflicting | conflicting |  | ok |
+
+## nli-material-fixed/sampled: 16 of 20 correct (80%)
+
+It asserted a relationship 20 times and was right 16 of those, so precision 80% against recall 80%.
+
+Errors: false conflict 4.
+
+| id | reference | truth | actual | reason | |
+|---|---|---|---|---|---|
+| s01 | The Agents SDK includes built-in tracing, collecting a comprehensive record of events during an agent run: LLM generations, tool calls, handoffs, guardrails, and even custom events that occur. | reinforcing | reinforcing |  | ok |
+| s02 | You can globally disable tracing in code with set_tracing_disabled(True) | reinforcing | reinforcing |  | ok |
+| s02n | You can not globally disable tracing in code with set_tracing_disabled(True) | conflicting | conflicting |  | ok |
+| s03 | Traces represent a single end-to-end operation of a "workflow". | reinforcing | reinforcing |  | ok |
+| s04 | For example, AgentSpanData contains information about the Agent, GenerationSpanData contains information about the LLM generation, etc. | reinforcing | reinforcing |  | ok |
+| s05 | Each model turn is wrapped in a turn_span(). | reinforcing | conflicting |  | **miss** (false conflict) |
+| s05n | Each model turn is not wrapped in a turn_span(). | conflicting | conflicting |  | ok |
+| s06 | Function tool calls are each wrapped in function_span() | reinforcing | conflicting |  | **miss** (false conflict) |
+| s06n | Function tool calls are not each wrapped in function_span() | conflicting | conflicting |  | ok |
+| s07 | Audio outputs (text-to-speech) are wrapped in a speech_span() | reinforcing | conflicting |  | **miss** (false conflict) |
+| s07n | Audio outputs (text-to-speech) are not wrapped in a speech_span() | conflicting | conflicting |  | ok |
+| s08 | You can set this name if you use trace, or you can configure the name and other properties with the RunConfig. | reinforcing | reinforcing |  | ok |
+| s08n | You can not set this name if you use trace, or you can configure the name and other properties with the RunConfig. | conflicting | conflicting |  | ok |
+| s09 | In addition, you can set up custom trace processors to push traces to other destinations (as a replacement, or secondary destination). | reinforcing | reinforcing |  | ok |
+| s09n | In addition, you can not set up custom trace processors to push traces to other destinations (as a replacement, or secondary destination). | conflicting | conflicting |  | ok |
+| s10 | Sometimes, you might want multiple calls to run() to be part of a single trace. | reinforcing | reinforcing |  | ok |
+| s11 | You can use the trace() function to create a trace. | reinforcing | conflicting |  | **miss** (false conflict) |
+| s11n | You can not use the trace() function to create a trace. | conflicting | conflicting |  | ok |
+| s12 | You can also manually call trace.start() and trace.finish(). | reinforcing | reinforcing |  | ok |
+| s12n | You can not also manually call trace.start() and trace.finish(). | conflicting | conflicting |  | ok |
+
+## nli-material-fixed/v2: 25 of 28 correct (89%)
+
+Declined to decide, by recorded reason: `model_found_no_relation` 6.
+
+It asserted a relationship 22 times and was right 19 of those, so precision 86% against recall 89%.
+
+Errors: false conflict 1, other 2.
+
+| id | reference | truth | actual | reason | |
+|---|---|---|---|---|---|
+| v01 | Using the Traces dashboard, you can debug, visualize, and monitor your workflows during development and in production. | reinforcing | reinforcing |  | ok |
+| v01n | Using the Traces dashboard, you can not debug, visualize, and monitor your workflows during development and in production. | conflicting | conflicting |  | ok |
+| v02 | You can disable tracing for a single run by setting agents.run.RunConfig.tracing_disabled to True | reinforcing | reinforcing |  | ok |
+| v02n | You can not disable tracing for a single run by setting agents.run.RunConfig.tracing_disabled to True | conflicting | conflicting |  | ok |
+| v03 | Must have the format trace_<32_alphanumeric>. | reinforcing | reinforcing |  | ok |
+| v04 | The entire Runner.{run, run_sync, run_streamed}() is wrapped in a trace(). | reinforcing | reinforcing |  | ok |
+| v04n | The entire Runner.{run, run_sync, run_streamed}() is not wrapped in a trace(). | conflicting | conflicting |  | ok |
+| v05 | Each time an agent runs, it is wrapped in agent_span() | reinforcing | conflicting |  | **miss** (false conflict) |
+| v05n | Each time an agent runs, it is not wrapped in agent_span() | conflicting | conflicting |  | ok |
+| v06 | Guardrails are wrapped in guardrail_span() | reinforcing | reinforcing |  | ok |
+| v06n | Guardrails are not wrapped in guardrail_span() | conflicting | conflicting |  | ok |
+| v07 | The SDK may parent related audio spans under a speech_group_span() | reinforcing | reinforcing |  | ok |
+| v07n | The SDK may not parent related audio spans under a speech_group_span() | conflicting | conflicting |  | ok |
+| v08 | If you want a more compact hierarchy, disable the automatic task and turn spans for a run. | reinforcing | reinforcing |  | ok |
+| v09 | The default BatchTraceProcessor exports traces in the background every few seconds, or sooner when the in-memory queue reaches its size trigger, and also performs a final flush when the process exits. | reinforcing | reinforcing |  | ok |
+| v10 | You can do this by wrapping the entire code in a trace(). | reinforcing | reinforcing |  | ok |
+| v10n | You can not do this by wrapping the entire code in a trace(). | conflicting | conflicting |  | ok |
+| v11 | Recommended: use the trace as a context manager, i.e. with trace(...) as my_trace. | reinforcing | reinforcing |  | ok |
+| v12 | The current trace is tracked via a Python contextvar. | reinforcing | reinforcing |  | ok |
+| v12n | The current trace is not tracked via a Python contextvar. | conflicting | conflicting |  | ok |
+| u01 | The ZIP file format is a common archive and compression standard. | unrelated | reinforcing |  | **miss** (other) |
+| u02 | This requires the compression.zstd module. | unrelated | unrelated | `model_found_no_relation` | ok |
+| u03 | This attribute is a workaround for legacy implementations which produce archives with names in the current locale encoding or code page (mostly on Windows). | unrelated | unrelated | `model_found_no_relation` | ok |
+| u04 | Use io.TextIOWrapper for reading compressed text files in universal newlines mode. | unrelated | reinforcing |  | **miss** (other) |
+| u05 | ZipFile.write(filename, arcname=None, compress_type=None, compresslevel=None)¶ | unrelated | unrelated | `model_found_no_relation` | ok |
+| u06 | Debugging information is written to sys.stdout. | unrelated | unrelated | `model_found_no_relation` | ok |
+| u07 | Positional and keyword arguments are passed through to io.TextIOWrapper (except buffer, which is implied by the context). | unrelated | unrelated | `model_found_no_relation` | ok |
+| u08 | Changed in version 3.6.2: The filename parameter accepts a path-like object. | unrelated | unrelated | `model_found_no_relation` | ok |
 
 ## Reading these
 

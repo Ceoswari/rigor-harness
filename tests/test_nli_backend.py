@@ -104,6 +104,54 @@ class TestResultContract(unittest.TestCase):
         self.assertIn("declined_results_name_a_reason", result["failed_checks"])
 
 
+class TestFixesWithoutTheModel(unittest.TestCase):
+    """The two fixes' pure logic, which needs no model to check."""
+
+    TITLE = "Tracing - OpenAI Agents SDK"
+
+    def test_constants_are_declared_and_pinned(self):
+        """Set before v2 was scored with the fixes in place. Not tuned."""
+        self.assertTrue(nli.DECONTEXTUALIZE)
+        self.assertTrue(nli.GATE_CONTRADICTIONS)
+        self.assertEqual(nli.GATE_MIN, compare.SUBJECT_OVERLAP_MIN)
+
+    def test_context_prefix_reads_naturally(self):
+        self.assertEqual(nli.context_prefix(self.TITLE),
+                         "In the OpenAI Agents SDK documentation on Tracing: ")
+        self.assertEqual(nli.context_prefix(None), "")
+
+    def test_gate_blocks_the_spurious_contradiction_behind_reference_a(self):
+        overlap = nli.topical_overlap(
+            "OpenAI Agents SDK tracing is enabled by default.",
+            "The SDK omits that identifier from redacted spans for custom endpoints.",
+            self.TITLE)
+        self.assertLess(overlap, nli.GATE_MIN)
+
+    def test_gate_lets_the_real_default_conflict_through(self):
+        overlap = nli.topical_overlap(
+            "OpenAI Agents SDK tracing is disabled by default.",
+            "Tracing is enabled by default.", self.TITLE)
+        self.assertGreaterEqual(overlap, nli.GATE_MIN)
+
+    def test_gate_blocks_an_unrelated_subject(self):
+        overlap = nli.topical_overlap(
+            "Kubernetes pods are evicted when a node runs out of memory.",
+            "flush_traces() blocks until currently buffered traces and spans are exported.",
+            self.TITLE)
+        self.assertLess(overlap, nli.GATE_MIN)
+
+    def test_gate_abstains_when_nothing_is_left_to_judge(self):
+        """Blocking here would erase every conflict a bare statement can have."""
+        self.assertIsNone(nli.topical_overlap(
+            "Tracing is disabled.", "Tracing is enabled by default.", self.TITLE))
+
+    def test_title_is_captured_without_changing_the_body_text(self):
+        """The rules backend reads body text, so it must not move."""
+        record, _, _, _ = page_and_claims()
+        self.assertEqual(record["title"], self.TITLE)
+        self.assertIn(self.TITLE, record["text"])
+
+
 class TestMaterialScope(unittest.TestCase):
 
     def test_material_sentences_exceed_the_bounded_claim_set(self):
@@ -124,12 +172,16 @@ class TestMaterialScope(unittest.TestCase):
 
 @unittest.skipUnless(HAVE_MODEL_DEPS, "torch and transformers are not installed")
 class TestAgainstTheRealModel(unittest.TestCase):
-    """Only runs where the optional dependencies exist."""
+    """Only runs where the optional dependencies exist.
+
+    Records the backend as first built, with both fixes switched off.
+    """
 
     @classmethod
     def setUpClass(cls):
         try:
-            cls.comparator = nli.NliComparator()
+            cls.comparator = nli.NliComparator(decontextualize=False,
+                                               gate_contradictions=False)
         except nli.ModelUnavailable as exc:
             raise unittest.SkipTest(str(exc))
         cls.record, cls.claims, cls.focus, cls.data = page_and_claims()
@@ -189,12 +241,15 @@ class TestMeasuredBaseline(unittest.TestCase):
     """
 
     MEASURED = {("nli-claims", "heldout.json"): 6, ("nli-claims", "sampled.json"): 8,
-                ("nli-material", "heldout.json"): 8, ("nli-material", "sampled.json"): 14}
+                ("nli-material", "heldout.json"): 8, ("nli-material", "sampled.json"): 14,
+                ("nli-claims", "heldout_v2.json"): 14,
+                ("nli-material", "heldout_v2.json"): 15}
 
     @classmethod
     def setUpClass(cls):
         try:
-            cls.comparator = nli.NliComparator()
+            cls.comparator = nli.NliComparator(decontextualize=False,
+                                               gate_contradictions=False)
         except nli.ModelUnavailable as exc:
             raise unittest.SkipTest(str(exc))
         cls.record, cls.claims, cls.focus, _ = page_and_claims()
@@ -234,6 +289,86 @@ class TestMeasuredBaseline(unittest.TestCase):
         result = self.comparator.compare_one(kubernetes, self.claims, self.index)
         self.assertEqual(result["classification"], compare.CONFLICTING)
         self.assertEqual(kubernetes["truth"], "unrelated")
+
+
+@unittest.skipUnless(HAVE_MODEL_DEPS, "torch and transformers are not installed")
+class TestFixedBackendOnHeldOutV2(unittest.TestCase):
+    """What the two fixes did on the only set that can judge them fairly.
+
+    Order of events, all visible in git history: v2 and its predictions were
+    committed (369e8c7), the unfixed backend was scored on v2 and those results
+    committed on their own (27e0496), then the fixes were written and scored.
+
+        nli-material        unfixed 15/28   fixed 25/28   predicted 21 to 25
+        false conflicts on 8 unrelated      6 -> 0        predicted 0 or 1
+        true conflicts lost among 8 negated        0      predicted 0 to 2
+        pilot Reference A           conflicting -> reinforcing, as predicted
+
+    Two things were not predicted, and both are recorded below.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        try:
+            cls.fixed = nli.NliComparator(decontextualize=True, gate_contradictions=True)
+        except nli.ModelUnavailable as exc:
+            raise unittest.SkipTest(str(exc))
+        cls.record, cls.claims, cls.focus, cls.pilot = page_and_claims()
+        cls.index = compare.source_index(cls.record["text"])
+        cls.sentences = nli.material_sentences(cls.record["text"], cls.focus)
+        with open(os.path.join(ROOT, "fixtures", "heldout_v2.json"), encoding="utf-8") as fh:
+            cls.v2 = json.load(fh)["references"]
+        cls.title = cls.record["title"]
+
+    def _run(self, refs, sentences):
+        return {r["id"]: (r, self.fixed.compare_one(r, self.claims, self.index,
+                                                    sentences, self.title))
+                for r in refs}
+
+    def test_material_scope_scores_25_of_28(self):
+        results = self._run(self.v2, self.sentences)
+        self.assertEqual(sum(res["classification"] == ref["truth"]
+                             for ref, res in results.values()), 25)
+
+    def test_no_false_conflicts_on_unrelated_references(self):
+        results = self._run([r for r in self.v2 if r["id"].startswith("u")], self.sentences)
+        conflicts = [k for k, (_, res) in results.items()
+                     if res["classification"] == compare.CONFLICTING]
+        self.assertEqual(conflicts, [])
+
+    def test_it_now_passes_the_pilots_reference_a(self):
+        results = self._run(self.pilot["references"], self.sentences)
+        self.assertEqual(results["ref_a"][1]["classification"], compare.REINFORCING)
+        self.assertEqual(results["ref_b"][1]["classification"], compare.CONFLICTING)
+
+    def test_unpredicted_the_gate_does_not_cover_false_support(self):
+        """Not predicted. The gate only screens contradictions, by design.
+
+        Two zipfile sentences, unrelated to tracing, come back reinforcing.
+        Extending the gate to entailment is the obvious next step, and it is
+        deliberately not done here: it would be designed after seeing v2, which
+        would leave no clean set to judge it on.
+        """
+        results = self._run([r for r in self.v2 if r["id"] in ("u01", "u04")],
+                            self.sentences)
+        for ref_id, (_, res) in results.items():
+            with self.subTest(ref=ref_id):
+                self.assertEqual(res["classification"], compare.REINFORCING)
+
+    def test_unpredicted_claims_scope_right_answers_were_partly_luck(self):
+        """Not predicted, and the more interesting surprise.
+
+        Reading only the 8 extracted claims, the unfixed backend got all 8
+        negated v2 sentences right. With the gate on, 7 of them decline as
+        uncovered. Their real contradicting sentence is not among the 8 claims,
+        so the unfixed backend had been matching them against claims about
+        something else and landing on the right label by accident.
+        """
+        negated = [r for r in self.v2 if r["id"].endswith("n")]
+        results = self._run(negated, None)
+        uncovered = [k for k, (_, res) in results.items()
+                     if res["classification"] == compare.UNCOVERED]
+        self.assertEqual(len(uncovered), 7)
 
 
 if __name__ == "__main__":

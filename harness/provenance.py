@@ -34,6 +34,8 @@ class _TextExtractor(HTMLParser):
         self._skip_depth = 0
         self._lines: List[str] = []
         self._current: List[str] = []
+        self._in_title = False
+        self.title: Optional[str] = None
 
     def _break(self) -> None:
         line = re.sub(r"\s+", " ", "".join(self._current)).strip()
@@ -42,6 +44,8 @@ class _TextExtractor(HTMLParser):
         self._current = []
 
     def handle_starttag(self, tag, attrs):
+        if tag == "title":
+            self._in_title = True
         if tag in self.SKIP:
             self._skip_depth += 1
         elif tag in self.BLOCK and not self._skip_depth:
@@ -52,6 +56,8 @@ class _TextExtractor(HTMLParser):
             self._break()
 
     def handle_endtag(self, tag):
+        if tag == "title":
+            self._in_title = False
         if tag in self.SKIP:
             if self._skip_depth:
                 self._skip_depth -= 1
@@ -59,6 +65,12 @@ class _TextExtractor(HTMLParser):
             self._break()
 
     def handle_data(self, data):
+        # The title is recorded separately for decontextualization, but it is
+        # deliberately left in the body text too. Removing it would change the
+        # source index the rule-based comparator uses, and that backend's
+        # measured baselines must not move as a side effect of an NLI fix.
+        if self._in_title:
+            self.title = ((self.title or "") + data).strip() or None
         if not self._skip_depth:
             self._current.append(data)
 
@@ -114,6 +126,7 @@ def to_source_record(fetch_record: Dict) -> Dict:
         "etag": fetch_record["etag"],
         "last_modified": fetch_record["last_modified"],
         "content_type": fetch_record["content_type"],
+        "title": parser.title,
         "fetch_mode": fetch_record.get("fetch_mode", "live_http"),
         "fixture_path": fetch_record.get("fixture_path"),
         "revision_count": 1,
@@ -145,6 +158,7 @@ class SourceStore:
         changed = existing["content_sha256"] != record["content_sha256"]
         existing["last_seen_at"] = record["last_seen_at"]
         existing["fetch_mode"] = record.get("fetch_mode")
+        existing["title"] = record.get("title")
         existing["fixture_path"] = record.get("fixture_path")
         if changed:
             existing["content_sha256"] = record["content_sha256"]
