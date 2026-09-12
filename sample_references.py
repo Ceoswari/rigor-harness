@@ -22,7 +22,23 @@ no judgement applied to which sentences are chosen:
 
 Whatever comes out is kept. Nothing is dropped for being inconvenient, and
 nothing in harness/ may be tuned against the result.
+
+Held-out set v2 (2026-09-12) uses the same rule with two additions:
+
+  --offset 1        start at the second eligible sentence, so every picked
+                    sentence is disjoint from the v1 sample
+  --unrelated-page  also draw sentences from an unrelated public page, keeping
+                    only those that mention no focus term, as references whose
+                    truth is 'unrelated'. v1 had none, so it could not measure
+                    whether a backend invents conflicts between unrelated
+                    statements.
+
+v2 exists because two fixes to the NLI backend were designed after seeing its
+failures on v1 and the stress set. Those sets can no longer measure them
+fairly. v2 was generated and the unfixed system scored on it before either fix
+was written, and the commit history shows that order.
 """
+import argparse
 import hashlib
 import json
 import os
@@ -43,8 +59,8 @@ STRIDE = 3
 LIMIT = 12
 
 
-def page_text():
-    with open(PAGE, "rb") as fh:
+def page_text(path=PAGE):
+    with open(path, "rb") as fh:
         body = fh.read()
     raw = {"url": "https://openai.github.io/openai-agents-python/tracing/",
            "http_status": None, "fetched_at": "sampling",
@@ -71,10 +87,27 @@ def negate(sentence):
     return sentence[:match.end()] + " not" + sentence[match.end():]
 
 
+def unrelated_sentence(sentence):
+    """Prose from the unrelated page that shares no focus term with the source."""
+    if not (40 <= len(sentence) <= 200):
+        return False
+    if sentence.endswith(":") or not sentence[:1].isupper():
+        return False
+    low = sentence.lower()
+    return not any(term in low for term in FOCUS)
+
+
 def main():
+    parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    parser.add_argument("--offset", type=int, default=0)
+    parser.add_argument("--prefix", default="s")
+    parser.add_argument("--unrelated-page", default=None)
+    parser.add_argument("--unrelated-count", type=int, default=0)
+    args = parser.parse_args()
+
     sentences = [s for s in split_sentences(page_text()) if eligible(s)]
     picked, seen = [], set()
-    for sentence in sentences[::STRIDE]:
+    for sentence in sentences[args.offset::STRIDE]:
         if sentence in seen:
             continue
         seen.add(sentence)
@@ -84,7 +117,7 @@ def main():
 
     refs, expectations = [], []
     for i, sentence in enumerate(picked, 1):
-        rid = "s%02d" % i
+        rid = "%s%02d" % (args.prefix, i)
         refs.append({"id": rid, "statement": sentence, "truth": "reinforcing",
                      "predicted_system": "unknown",
                      "why": "Verbatim sentence from the source page."})
@@ -96,13 +129,33 @@ def main():
                          "why": "Same sentence with 'not' inserted after the first auxiliary."})
             expectations.append({"reference_id": rid + "n", "expected": "conflicting"})
 
+    unrelated_page = None
+    if args.unrelated_page:
+        unrelated_page = os.path.basename(args.unrelated_page)
+        pool = [s for s in split_sentences(page_text(args.unrelated_page))
+                if unrelated_sentence(s)]
+        step = max(1, len(pool) // max(1, args.unrelated_count))
+        for i, sentence in enumerate(pool[::step][:args.unrelated_count], 1):
+            rid = "u%02d" % i
+            refs.append({"id": rid, "statement": sentence, "truth": "unrelated",
+                         "predicted_system": "unknown",
+                         "why": "Verbatim sentence from an unrelated page, sharing no "
+                                "focus term with the source."})
+            expectations.append({"reference_id": rid, "expected": "unrelated"})
+
+    procedure = {"stride": STRIDE, "limit": LIMIT,
+                 "length_range": [40, 200], "page": os.path.basename(PAGE)}
+    if args.offset:
+        procedure["offset"] = args.offset
+    if unrelated_page:
+        procedure["unrelated_page"] = unrelated_page
+        procedure["unrelated_count"] = args.unrelated_count
     out = {
         "note": ("Mechanically sampled from the source page by sample_references.py. "
                  "No judgement was applied to which sentences were chosen, so this "
                  "measures the task rather than the system's known weak points. "
                  "Compare against fixtures/heldout.json, which is a stress set."),
-        "procedure": {"stride": STRIDE, "limit": LIMIT,
-                      "length_range": [40, 200], "page": os.path.basename(PAGE)},
+        "procedure": procedure,
         "focus_terms": FOCUS,
         "references": refs,
         "expectations": expectations,

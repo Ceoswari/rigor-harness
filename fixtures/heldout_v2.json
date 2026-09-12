@@ -1,0 +1,339 @@
+{
+  "note": "Mechanically sampled from the source page by sample_references.py. No judgement was applied to which sentences were chosen, so this measures the task rather than the system's known weak points. Compare against fixtures/heldout.json, which is a stress set.",
+  "procedure": {
+    "stride": 3,
+    "limit": 12,
+    "length_range": [
+      40,
+      200
+    ],
+    "page": "fixture_tracing_page_2026-09-11.html",
+    "offset": 1,
+    "unrelated_page": "fixture_unrelated_zipfile.html",
+    "unrelated_count": 8
+  },
+  "focus_terms": [
+    "tracing",
+    "traces",
+    "trace",
+    "spans",
+    "span",
+    "sdk",
+    "agents",
+    "sensitive",
+    "data",
+    "workflow"
+  ],
+  "references": [
+    {
+      "id": "v01",
+      "statement": "Using the Traces dashboard, you can debug, visualize, and monitor your workflows during development and in production.",
+      "truth": "reinforcing",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from the source page."
+    },
+    {
+      "id": "v01n",
+      "statement": "Using the Traces dashboard, you can not debug, visualize, and monitor your workflows during development and in production.",
+      "truth": "conflicting",
+      "predicted_system": "unknown",
+      "why": "Same sentence with 'not' inserted after the first auxiliary."
+    },
+    {
+      "id": "v02",
+      "statement": "You can disable tracing for a single run by setting agents.run.RunConfig.tracing_disabled to True",
+      "truth": "reinforcing",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from the source page."
+    },
+    {
+      "id": "v02n",
+      "statement": "You can not disable tracing for a single run by setting agents.run.RunConfig.tracing_disabled to True",
+      "truth": "conflicting",
+      "predicted_system": "unknown",
+      "why": "Same sentence with 'not' inserted after the first auxiliary."
+    },
+    {
+      "id": "v03",
+      "statement": "Must have the format trace_<32_alphanumeric>.",
+      "truth": "reinforcing",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from the source page."
+    },
+    {
+      "id": "v04",
+      "statement": "The entire Runner.{run, run_sync, run_streamed}() is wrapped in a trace().",
+      "truth": "reinforcing",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from the source page."
+    },
+    {
+      "id": "v04n",
+      "statement": "The entire Runner.{run, run_sync, run_streamed}() is not wrapped in a trace().",
+      "truth": "conflicting",
+      "predicted_system": "unknown",
+      "why": "Same sentence with 'not' inserted after the first auxiliary."
+    },
+    {
+      "id": "v05",
+      "statement": "Each time an agent runs, it is wrapped in agent_span()",
+      "truth": "reinforcing",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from the source page."
+    },
+    {
+      "id": "v05n",
+      "statement": "Each time an agent runs, it is not wrapped in agent_span()",
+      "truth": "conflicting",
+      "predicted_system": "unknown",
+      "why": "Same sentence with 'not' inserted after the first auxiliary."
+    },
+    {
+      "id": "v06",
+      "statement": "Guardrails are wrapped in guardrail_span()",
+      "truth": "reinforcing",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from the source page."
+    },
+    {
+      "id": "v06n",
+      "statement": "Guardrails are not wrapped in guardrail_span()",
+      "truth": "conflicting",
+      "predicted_system": "unknown",
+      "why": "Same sentence with 'not' inserted after the first auxiliary."
+    },
+    {
+      "id": "v07",
+      "statement": "The SDK may parent related audio spans under a speech_group_span()",
+      "truth": "reinforcing",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from the source page."
+    },
+    {
+      "id": "v07n",
+      "statement": "The SDK may not parent related audio spans under a speech_group_span()",
+      "truth": "conflicting",
+      "predicted_system": "unknown",
+      "why": "Same sentence with 'not' inserted after the first auxiliary."
+    },
+    {
+      "id": "v08",
+      "statement": "If you want a more compact hierarchy, disable the automatic task and turn spans for a run.",
+      "truth": "reinforcing",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from the source page."
+    },
+    {
+      "id": "v09",
+      "statement": "The default BatchTraceProcessor exports traces in the background every few seconds, or sooner when the in-memory queue reaches its size trigger, and also performs a final flush when the process exits.",
+      "truth": "reinforcing",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from the source page."
+    },
+    {
+      "id": "v10",
+      "statement": "You can do this by wrapping the entire code in a trace().",
+      "truth": "reinforcing",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from the source page."
+    },
+    {
+      "id": "v10n",
+      "statement": "You can not do this by wrapping the entire code in a trace().",
+      "truth": "conflicting",
+      "predicted_system": "unknown",
+      "why": "Same sentence with 'not' inserted after the first auxiliary."
+    },
+    {
+      "id": "v11",
+      "statement": "Recommended: use the trace as a context manager, i.e. with trace(...) as my_trace.",
+      "truth": "reinforcing",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from the source page."
+    },
+    {
+      "id": "v12",
+      "statement": "The current trace is tracked via a Python contextvar.",
+      "truth": "reinforcing",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from the source page."
+    },
+    {
+      "id": "v12n",
+      "statement": "The current trace is not tracked via a Python contextvar.",
+      "truth": "conflicting",
+      "predicted_system": "unknown",
+      "why": "Same sentence with 'not' inserted after the first auxiliary."
+    },
+    {
+      "id": "u01",
+      "statement": "The ZIP file format is a common archive and compression standard.",
+      "truth": "unrelated",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from an unrelated page, sharing no focus term with the source."
+    },
+    {
+      "id": "u02",
+      "statement": "This requires the compression.zstd module.",
+      "truth": "unrelated",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from an unrelated page, sharing no focus term with the source."
+    },
+    {
+      "id": "u03",
+      "statement": "This attribute is a workaround for legacy implementations which produce archives with names in the current locale encoding or code page (mostly on Windows).",
+      "truth": "unrelated",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from an unrelated page, sharing no focus term with the source."
+    },
+    {
+      "id": "u04",
+      "statement": "Use io.TextIOWrapper for reading compressed text files in universal newlines mode.",
+      "truth": "unrelated",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from an unrelated page, sharing no focus term with the source."
+    },
+    {
+      "id": "u05",
+      "statement": "ZipFile.write(filename, arcname=None, compress_type=None, compresslevel=None)\u00b6",
+      "truth": "unrelated",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from an unrelated page, sharing no focus term with the source."
+    },
+    {
+      "id": "u06",
+      "statement": "Debugging information is written to sys.stdout.",
+      "truth": "unrelated",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from an unrelated page, sharing no focus term with the source."
+    },
+    {
+      "id": "u07",
+      "statement": "Positional and keyword arguments are passed through to io.TextIOWrapper (except buffer, which is implied by the context).",
+      "truth": "unrelated",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from an unrelated page, sharing no focus term with the source."
+    },
+    {
+      "id": "u08",
+      "statement": "Changed in version 3.6.2: The filename parameter accepts a path-like object.",
+      "truth": "unrelated",
+      "predicted_system": "unknown",
+      "why": "Verbatim sentence from an unrelated page, sharing no focus term with the source."
+    }
+  ],
+  "expectations": [
+    {
+      "reference_id": "v01",
+      "expected": "reinforcing"
+    },
+    {
+      "reference_id": "v01n",
+      "expected": "conflicting"
+    },
+    {
+      "reference_id": "v02",
+      "expected": "reinforcing"
+    },
+    {
+      "reference_id": "v02n",
+      "expected": "conflicting"
+    },
+    {
+      "reference_id": "v03",
+      "expected": "reinforcing"
+    },
+    {
+      "reference_id": "v04",
+      "expected": "reinforcing"
+    },
+    {
+      "reference_id": "v04n",
+      "expected": "conflicting"
+    },
+    {
+      "reference_id": "v05",
+      "expected": "reinforcing"
+    },
+    {
+      "reference_id": "v05n",
+      "expected": "conflicting"
+    },
+    {
+      "reference_id": "v06",
+      "expected": "reinforcing"
+    },
+    {
+      "reference_id": "v06n",
+      "expected": "conflicting"
+    },
+    {
+      "reference_id": "v07",
+      "expected": "reinforcing"
+    },
+    {
+      "reference_id": "v07n",
+      "expected": "conflicting"
+    },
+    {
+      "reference_id": "v08",
+      "expected": "reinforcing"
+    },
+    {
+      "reference_id": "v09",
+      "expected": "reinforcing"
+    },
+    {
+      "reference_id": "v10",
+      "expected": "reinforcing"
+    },
+    {
+      "reference_id": "v10n",
+      "expected": "conflicting"
+    },
+    {
+      "reference_id": "v11",
+      "expected": "reinforcing"
+    },
+    {
+      "reference_id": "v12",
+      "expected": "reinforcing"
+    },
+    {
+      "reference_id": "v12n",
+      "expected": "conflicting"
+    },
+    {
+      "reference_id": "u01",
+      "expected": "unrelated"
+    },
+    {
+      "reference_id": "u02",
+      "expected": "unrelated"
+    },
+    {
+      "reference_id": "u03",
+      "expected": "unrelated"
+    },
+    {
+      "reference_id": "u04",
+      "expected": "unrelated"
+    },
+    {
+      "reference_id": "u05",
+      "expected": "unrelated"
+    },
+    {
+      "reference_id": "u06",
+      "expected": "unrelated"
+    },
+    {
+      "reference_id": "u07",
+      "expected": "unrelated"
+    },
+    {
+      "reference_id": "u08",
+      "expected": "unrelated"
+    }
+  ]
+}

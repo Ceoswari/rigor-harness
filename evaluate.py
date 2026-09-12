@@ -44,7 +44,10 @@ PAGE = os.path.join(HERE, "tests", "fixture_tracing_page_2026-09-11.html")
 URL = "https://openai.github.io/openai-agents-python/tracing/"
 
 SETS = [("stress", os.path.join(HERE, "fixtures", "heldout.json")),
-        ("sampled", os.path.join(HERE, "fixtures", "sampled.json"))]
+        ("sampled", os.path.join(HERE, "fixtures", "sampled.json")),
+        # v2 is the only set the NLI fixes may be judged on. See
+        # fixtures/heldout_v2_PREDICTIONS.md for why and for what was predicted.
+        ("v2", os.path.join(HERE, "fixtures", "heldout_v2.json"))]
 
 FALSE_CONFLICT = "false conflict"
 MISSED_CONFLICT = "missed conflict"
