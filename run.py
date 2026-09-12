@@ -42,6 +42,12 @@ def main(argv=None):
                         help="Corrupt one expectation to demonstrate visible failure.")
     parser.add_argument("--offline-fixture", default=None,
                         help="Path to saved HTML, for reproducible offline runs.")
+    parser.add_argument("--backend", choices=("rules", "nli"), default="rules",
+                        help="Comparison backend. 'rules' needs nothing installed; "
+                             "'nli' needs torch and transformers.")
+    parser.add_argument("--nli-scope", choices=("claims", "material"), default="claims",
+                        help="What the nli backend compares against: the bounded "
+                             "claim set, or every material sentence on the page.")
     args = parser.parse_args(argv)
 
     with open(args.fixtures, "r", encoding="utf-8") as fh:
@@ -74,7 +80,17 @@ def main(argv=None):
     # survived extraction, to tell "the source never mentions this" apart from
     # "extraction missed it".
     index = compare.source_index(upsert["record"]["text"])
-    comparisons = compare.compare_all(fixture_data["references"], claims, index)
+    if args.backend == "nli":
+        from harness import nli
+        comparator = nli.NliComparator()
+        sentences = (nli.material_sentences(upsert["record"]["text"], focus)
+                     if args.nli_scope == "material" else None)
+        comparisons = comparator.compare_all(fixture_data["references"], claims,
+                                             index, sentences)
+        backend_label = "nli (%s, %s)" % (comparator.model_name, args.nli_scope)
+    else:
+        comparisons = compare.compare_all(fixture_data["references"], claims, index)
+        backend_label = "rules"
 
     expectations = list(fixture_data["expectations"])
     if args.inject_failure:
@@ -90,6 +106,7 @@ def main(argv=None):
         "claims": claims,
         "comparisons": comparisons,
         "focus_terms": sorted(focus),
+        "backend": backend_label,
         "limitations": LIMITATIONS,
     }
     verification = verify.verify(run, expectations)
@@ -99,6 +116,7 @@ def main(argv=None):
 
     print("source        : %s (%s, %d sources in store)"
           % (upsert["record"]["url"], upsert["action"], store.count()))
+    print("backend       : %s" % backend_label)
     print("claims        : %d extracted" % len(claims))
     for comp in comparisons:
         print("  %-7s -> %s" % (comp["reference_id"], comp["classification"]))

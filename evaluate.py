@@ -27,6 +27,7 @@ the sampled number would understate it. Both are printed.
 Nothing in harness/ may be tuned to improve either. A set that gets tuned on
 is just a training set with a nicer name.
 """
+import argparse
 import hashlib
 import json
 import os
@@ -78,14 +79,17 @@ def build_claims(focus_terms):
             raw["content_sha256"])
 
 
-def score(path):
+def score(path, compare_fn=None):
     with open(path, encoding="utf-8") as fh:
         data = json.load(fh)
     claims, index, sha = build_claims(data["focus_terms"])
+    if compare_fn is None:
+        def compare_fn(ref, claims, index):
+            return compare.compare_one(ref, claims, index)
     rows, errors, correct, predicted_right, predictions = [], {}, 0, 0, 0
     declines = {}
     for ref in data["references"]:
-        result = compare.compare_one(ref, claims, index)
+        result = compare_fn(ref, claims, index)
         actual = result["classification"]
         ok = actual == ref["truth"]
         if actual in compare.DECLINED:
@@ -130,8 +134,8 @@ def score(path):
 
 
 def render(name, res):
-    lines = ["", "## %s set: %d of %d correct (%.0f%%)"
-             % (name.capitalize(), res["correct"], res["total"], 100 * res["accuracy"]), ""]
+    lines = ["", "## %s: %d of %d correct (%.0f%%)"
+             % (name, res["correct"], res["total"], 100 * res["accuracy"]), ""]
     if res["predictions_made"]:
         lines.append("Advance predictions correct: %d of %d.\n"
                      % (res["predictions_right"], res["predictions_made"]))
@@ -157,29 +161,81 @@ def render(name, res):
     return lines
 
 
-def main():
-    results = {}
-    for name, path in SETS:
-        results[name] = score(path)
-        res = results[name]
-        print("%-8s %2d/%2d correct (%3.0f%%)  asserted %d (right %d, wrong %d)  "
-              "declined %d (right %d)"
-              % (name, res["correct"], res["total"], 100 * res["accuracy"],
-                 res["opinions"], res["opinions_right"], res["wrong_assertions"],
-                 res["declined"], res["declined_right"]))
-        for reason, count in sorted(res["declines"].items()):
-            print("           declined %-34s %d" % (reason, count))
+def configurations(which):
+    """Which comparison backends to measure, in order.
 
+    'rules' needs nothing installed and is the baseline every other number is
+    compared against. The nli configurations need torch and transformers.
+    """
+    configs = [("rules", None)]
+    if which in ("nli", "all"):
+        from harness import nli
+        comparator = nli.NliComparator()
+        text = page_text()
+        focus = set(json.load(open(SETS[0][1], encoding="utf-8"))["focus_terms"])
+        sentences = nli.material_sentences(text, focus)
+        configs.append(("nli-claims", lambda ref, claims, index:
+                        comparator.compare_one(ref, claims, index)))
+        configs.append(("nli-material", lambda ref, claims, index:
+                        comparator.compare_one(ref, claims, index, sentences)))
+        print("nli backend: %s, %d material sentences in scope\n"
+              % (comparator.model_name, len(sentences)))
+    if which == "nli":
+        configs = [c for c in configs if c[0] != "rules"] or configs
+    return configs
+
+
+def page_text():
+    with open(PAGE, "rb") as fh:
+        body = fh.read()
+    raw = {"url": URL, "http_status": None, "fetched_at": "evaluation",
+           "content_sha256": hashlib.sha256(body).hexdigest(),
+           "content_length": len(body), "etag": None, "last_modified": None,
+           "content_type": "text/html", "_body": body,
+           "fetch_mode": "offline_fixture", "fixture_path": "tests/"}
+    return to_source_record(raw)["text"]
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Measure the comparison backends")
+    parser.add_argument("--backend", choices=("rules", "nli", "all"), default="rules",
+                        help="'rules' is the zero-install baseline. 'all' measures "
+                             "every backend on the same frozen sets.")
+    args = parser.parse_args()
+
+    configs = configurations(args.backend)
+    results = {}
+    for config_name, fn in configs:
+        for name, path in SETS:
+            results["%s/%s" % (config_name, name)] = score(path, fn)
+            res = results["%s/%s" % (config_name, name)]
+            print("%-14s %-8s %2d/%2d correct (%3.0f%%)  asserted %d (right %d, wrong %d)"
+                  "  declined %d (right %d)"
+                  % (config_name, name, res["correct"], res["total"],
+                     100 * res["accuracy"], res["opinions"], res["opinions_right"],
+                     res["wrong_assertions"], res["declined"], res["declined_right"]))
+
+    baseline = {n: results.get("rules/%s" % n) for n, _ in SETS}
     doc = ["# Evaluation results", "",
            "Measured 2026-09-12 against the September 11 copy of the source page "
-           "(SHA-256 `%s`)." % results["stress"]["source_sha256"][:16], "",
+           "(SHA-256 `%s`)." % list(results.values())[0]["source_sha256"][:16], "",
            "Two sets, because one number on its own would mislead. The stress set was "
            "written by me, knowing the implementation, choosing cases likely to break it. "
            "The sampled set was generated from the page by a fixed mechanical rule with no "
            "judgement about which sentences were chosen. Reproduce both with "
            "`python3 evaluate.py`.", ""]
-    for name, _ in SETS:
-        doc += render(name, results[name])
+    doc += ["", "| backend | set | correct | asserted | asserted right | declined |",
+            "|---|---|---|---|---|---|"]
+    for key in results:
+        config_name, set_name = key.split("/")
+        r = results[key]
+        doc.append("| `%s` | %s | %d of %d (%.0f%%) | %d | %d | %d |"
+                   % (config_name, set_name, r["correct"], r["total"],
+                      100 * r["accuracy"], r["opinions"], r["opinions_right"],
+                      r["declined"]))
+    doc.append("")
+    for key in results:
+        doc += render(key, results[key])
     doc += ["", "## Reading these", "",
             "A false conflict is the expensive error: it sends a reader to re-check a source "
             "that was right. A missed reinforcement is the cheap one: the system fails to "

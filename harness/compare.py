@@ -48,6 +48,14 @@ DECLINED = (INDETERMINATE, UNRELATED, UNREPRESENTABLE, UNCOVERED)
 SUBJECT_OVERLAP_MIN = 0.34
 SOURCE_PRESENCE_MIN = 0.34
 
+#: What every comparison result must carry, whichever backend produced it.
+#: The verifier and the report are written against this and nothing else, so an
+#: alternative backend (see harness/nli.py) stays interchangeable. Backends may
+#: add their own diagnostic keys on top: the rule-based one adds
+#: `reference_proposition`, the NLI one adds `confidence` and `scope`.
+RESULT_CONTRACT = ("reference_id", "reference_statement", "classification",
+                   "decided", "reason", "rationale", "evidence")
+
 
 def source_index(text: str) -> List[Set[str]]:
     """Token sets for the source's sentences.

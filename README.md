@@ -9,11 +9,12 @@ Built for the Bounded Autonomous AI Systems Pilot (Kevin Ng, September 2026). Fi
 source: the OpenAI Agents SDK tracing page,
 `https://openai.github.io/openai-agents-python/tracing/`.
 
-**Start with the numbers.** Against the three supplied fixtures it passes every
-acceptance test. Against 14 references chosen to stress it, it is right 3 times. Against
-20 references sampled mechanically from the page, it is right 3 times and silent 17
-times. All three numbers are reproducible below, and the last two matter more than the
-first.
+**Start with the numbers.** The default rule-based comparator passes every acceptance
+test, but is right on only 3 of 14 stress references and 3 of 20 sampled ones. An optional
+NLI backend raises that to 8 of 14 and 14 of 20, and in exchange it fails the pilot's own
+Reference A and invents confident contradictions between unrelated statements. Both
+backends are measured on the same frozen sets, and the section on the NLI backend below
+explains why the weaker one is still the default.
 
 ## Running it
 
@@ -24,7 +25,8 @@ python3 run.py                    # fetch the live page, classify, verify, repor
 python3 run.py --inject-failure   # prove a failed check is reported, not hidden
 python3 evaluate.py               # measure against both reference sets
 python3 sample_references.py      # regenerate the mechanically sampled set
-python3 -m unittest discover -s tests -v      # 45 tests, no network needed
+python3 run.py --backend nli      # optional NLI backend, needs requirements-nli.txt
+python3 -m unittest discover -s tests -v      # 56 tests, 5 skip without the NLI extras
 ```
 
 `run.py` writes `out/run.json` and `out/report.md`, and exits 0 when verification passes
@@ -214,6 +216,72 @@ human, not from the system, and the system had already reported success.
 That is the honest measure of autonomy on this pilot. The build ran with very little
 supervision. The judgement about whether the build had answered the question did not.
 
+## An optional NLI backend
+
+The rule-based comparator's declines all trace to one place: 17 of 17 on the sampled set
+are statements that sit on none of its four hand-listed axes. That is a vocabulary limit,
+and `REUSE_SCAN.md` named the obvious replacement, a natural language inference model with
+no vocabulary to run out of. `harness/nli.py` implements it with
+`cross-encoder/nli-deberta-v3-base`.
+
+**It is a backend you switch on, not a replacement.** It needs torch and transformers, about
+a gigabyte of wheels plus 700 MB of weights, which would end the repo's one real usability
+property of cloning and running with nothing installed. So `--backend rules` stays the
+default, `--backend nli` switches this on (see `requirements-nli.txt`), and both emit results
+satisfying the same declared contract, `compare.RESULT_CONTRACT`. The deterministic verifier
+runs unchanged against either.
+
+**The confidence threshold was fixed at 0.50 before the backend was ever run**, and is pinned
+by a test. It is not tuned against the evaluation sets, for the same reason two known bugs in
+the rule-based comparator were left unfixed.
+
+It was measured in two scopes. `claims` gives it the same 8 extracted claims the rule-based
+comparator sees, which is the like-for-like comparison. `material` gives it all 62 material
+sentences on the page, which tests whether extraction's 11% coverage was the real limit.
+
+| backend | stress | sampled | precision on sampled | declines on sampled |
+|---|---|---|---|---|
+| `rules` | 3 of 14 | 3 of 20 | 100% (3 of 3) | 17 |
+| `nli`, claims | 6 of 14 | 8 of 20 | 67% (8 of 12) | 8 |
+| `nli`, material | 8 of 14 | 14 of 20 | 70% (14 of 20) | 0 |
+
+Two things are true at once.
+
+**It is much better at the task.** On the unbiased sample it goes from 3 correct to 14, and
+widening scope from 8 claims to the whole page is worth almost as much as the model itself,
+which confirms the coverage number was pointing at something real. It also fixes the
+modality case the rule-based comparator got worst: "Tracing must be enabled manually before
+it will record anything" is correctly a contradiction, where the rules called it support.
+
+**It trades silence for confident error.** On the material scope every single error, 6 on
+each set, is a false conflict, and it declines nothing at all. It calls the Kubernetes
+reference, which has nothing to do with the page, a contradiction. The rule-based comparator
+was right about that one. The rules backend is narrow and quiet when unsure; this one always
+has an opinion.
+
+**And it fails the pilot's own Reference A.** "OpenAI Agents SDK tracing is enabled by
+default" comes back conflicting. The diagnosis has two parts:
+
+1. The model scores the page's sentence "Tracing is enabled by default." against Reference A
+   as neutral at 1.00, with zero entailment. In strict NLI terms that is correct, because the
+   sentence never says whose tracing, so it cannot entail a claim that names the SDK. This is
+   the missing decontextualization stage `REUSE_SCAN.md` named from Claimify, now showing up
+   as a measured failure rather than a hypothetical one.
+2. It scores an unrelated sentence, "The SDK omits that identifier from redacted spans for
+   custom endpoints.", as a contradiction at 0.96. The backend keeps the single most confident
+   verdict across premises, so that spurious contradiction wins.
+
+**The verifier caught it without being changed.** `python3 run.py --backend nli` fails
+verification on two checks: Reference A's expectation, and `beats_naive_overlap_baseline`,
+because A and B now receive the same label. Collapsing two statements that differ by one word
+into a single verdict is precisely the failure the pilot's fixtures exist to detect, and a
+verifier written for a different backend detected it. That is the strongest evidence in this
+repo that keeping the verifier independent of the pipeline was worth the duplication it costs.
+
+That is why `rules` is still the default: it passes the acceptance tests and it does not make
+things up. The NLI backend is the better comparator and the worse system, and both of those
+are measured rather than asserted.
+
 ## Reuse before build
 
 The full scan, with benchmark numbers and sources, is in `REUSE_SCAN.md`. It was run after
@@ -279,14 +347,21 @@ Sentence splitting is tuned for documentation pages rather than prose. Materiali
 a heuristic, and the September 11 drift showed that a bounded set plus a heuristic ranking is
 where this design is most fragile.
 
-**What I would build next.** The first two items are done: the `unrelated` split, and the
-coverage number in the verifier, both described above. The remaining one is replacing the
-comparator with an NLI cross-encoder while keeping the deterministic verifier unchanged, and
-measuring it against both frozen sets, where it has to beat 3 of 14 and 3 of 20. The coverage
-figure gives it a second bar to clear that accuracy alone would hide: 11% of the page's
-material sentences represented, and 17 of 20 sampled references declined for want of an axis.
-A model that answers more of them without losing the verifier's grounding check is the whole
-bet, and it can now be measured rather than asserted. Add a decontextualization stage so claims stand alone. Schedule
+**What I would build next.** All three items committed to after Kevin Ng's review are done:
+the `unrelated` split, the coverage number, and the NLI backend. The NLI measurement points at
+two specific fixes, both of which the pilot already has the parts for:
+
+- **Decontextualize premises before the model sees them**, so "Tracing is enabled by default."
+  reaches it carrying the page's subject. This is the stage `REUSE_SCAN.md` flagged and the
+  direct cause of the Reference A failure.
+- **Gate contradictions on subject overlap.** The rule-based comparator already computes
+  whether a premise and a reference are about the same thing. A contradiction between
+  statements with no shared subject, like the Kubernetes one, should decline rather than
+  assert. That combines the rules backend's precision with the model's recall.
+
+**Both fixes would have to be measured on a new held-out set.** They were designed after
+seeing where the model failed on the current ones, so re-scoring them on the same 34
+references would report an improvement the design had already been fitted to. Add a decontextualization stage so claims stand alone. Schedule
 the run so upstream drift is caught on a cadence rather than by accident, and diff claims
 between revisions so the report says what changed rather than only that the hash changed.
 
@@ -301,10 +376,12 @@ harness/claims.py           sentence to proposition, materiality ranking, bounde
 harness/compare.py          reference against claims, scope before polarity
 harness/verify.py           independent checks, imports nothing from the pipeline
 harness/report.py           JSON and Markdown output
+harness/nli.py              optional NLI backend, same result contract, off by default
+requirements-nli.txt        the optional extras, pinned to the measured versions
 fixtures/references.json    the three pilot references and their expectations
 fixtures/heldout.json       14 stress references with truth and advance predictions
 fixtures/sampled.json       20 references generated mechanically from the page
-tests/                      45 tests, two saved copies of the source page
+tests/                      56 tests, two saved copies of the source page
 REUSE_SCAN.md               the current-state scan, with benchmarks and sources
 docs/example-report.md      committed sample of the human-readable output
 docs/evaluation-results.md  committed scorecards for both sets
