@@ -1,0 +1,2079 @@
+{
+  "nli-claims/sampled": {
+    "accuracy": 0.4,
+    "correct": 8,
+    "declined": 8,
+    "declined_right": 0,
+    "declines": {
+      "subject_present_but_not_extracted": 8
+    },
+    "errors": {
+      "false conflict": 3,
+      "missed conflict": 3,
+      "missed support": 6
+    },
+    "note": "Mechanically sampled from the source page by sample_references.py. No judgement was applied to which sentences were chosen, so this measures the task rather than the system's known weak points. Compare against fixtures/heldout.json, which is a stress set.",
+    "opinions": 12,
+    "opinions_right": 8,
+    "precision": 0.667,
+    "predictions_made": 0,
+    "predictions_right": 0,
+    "rows": [
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "s01",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "The Agents SDK includes built-in tracing, collecting a comprehensive record of events during an agent run: LLM generations, tool calls, handoffs, guardrails, and even custom events that occur.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "s02",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "You can globally disable tracing in code with set_tracing_disabled(True)",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "s02n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "You can not globally disable tracing in code with set_tracing_disabled(True)",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "uncovered",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "s03",
+        "predicted": "unknown",
+        "reason": "subject_present_but_not_extracted",
+        "statement": "Traces represent a single end-to-end operation of a \"workflow\".",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "uncovered",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "s04",
+        "predicted": "unknown",
+        "reason": "subject_present_but_not_extracted",
+        "statement": "For example, AgentSpanData contains information about the Agent, GenerationSpanData contains information about the LLM generation, etc.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "s05",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Each model turn is wrapped in a turn_span().",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "s05n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Each model turn is not wrapped in a turn_span().",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "s06",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Function tool calls are each wrapped in function_span()",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": false,
+        "error_kind": "missed conflict",
+        "id": "s06n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Function tool calls are not each wrapped in function_span()",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "s07",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Audio outputs (text-to-speech) are wrapped in a speech_span()",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "s07n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Audio outputs (text-to-speech) are not wrapped in a speech_span()",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "uncovered",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "s08",
+        "predicted": "unknown",
+        "reason": "subject_present_but_not_extracted",
+        "statement": "You can set this name if you use trace, or you can configure the name and other properties with the RunConfig.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "s08n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "You can not set this name if you use trace, or you can configure the name and other properties with the RunConfig.",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "uncovered",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "s09",
+        "predicted": "unknown",
+        "reason": "subject_present_but_not_extracted",
+        "statement": "In addition, you can set up custom trace processors to push traces to other destinations (as a replacement, or secondary destination).",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "uncovered",
+        "correct": false,
+        "error_kind": "missed conflict",
+        "id": "s09n",
+        "predicted": "unknown",
+        "reason": "subject_present_but_not_extracted",
+        "statement": "In addition, you can not set up custom trace processors to push traces to other destinations (as a replacement, or secondary destination).",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "uncovered",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "s10",
+        "predicted": "unknown",
+        "reason": "subject_present_but_not_extracted",
+        "statement": "Sometimes, you might want multiple calls to run() to be part of a single trace.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "s11",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "You can use the trace() function to create a trace.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "s11n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "You can not use the trace() function to create a trace.",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "uncovered",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "s12",
+        "predicted": "unknown",
+        "reason": "subject_present_but_not_extracted",
+        "statement": "You can also manually call trace.start() and trace.finish().",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "uncovered",
+        "correct": false,
+        "error_kind": "missed conflict",
+        "id": "s12n",
+        "predicted": "unknown",
+        "reason": "subject_present_but_not_extracted",
+        "statement": "You can not also manually call trace.start() and trace.finish().",
+        "truth": "conflicting"
+      }
+    ],
+    "source_sha256": "816bf4a4d7b207d314a62a8606dbec3bc1a2e1475066f84667ed1fb6ee3ed5d1",
+    "total": 20,
+    "wrong_assertions": 4
+  },
+  "nli-claims/stress": {
+    "accuracy": 0.429,
+    "correct": 6,
+    "declined": 3,
+    "declined_right": 0,
+    "declines": {
+      "subject_present_but_not_extracted": 3
+    },
+    "errors": {
+      "false conflict": 5,
+      "missed support": 3
+    },
+    "note": "Held-out evaluation set. Written on 2026-09-12 AFTER the comparator was finished and BEFORE it was run against any of these. Every entry carries `truth`, which is the label a careful reader would assign, and `predicted_system`, which is what I expected this implementation to actually output, recorded in advance. The gap between those two columns is the measurement. Nothing in the comparator may be tuned to make these pass: the moment it is tuned on this set, the set stops being evidence.",
+    "opinions": 11,
+    "opinions_right": 6,
+    "precision": 0.545,
+    "predictions_made": 14,
+    "predictions_right": 4,
+    "rows": [
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "h01",
+        "predicted": "conflicting",
+        "reason": null,
+        "statement": "Agents SDK tracing is turned on unless you disable it.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "h02",
+        "predicted": "unrelated",
+        "reason": null,
+        "statement": "Tracing is unavailable for organizations that use OpenAI's APIs under a Zero Data Retention policy.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "h03",
+        "predicted": "conflicting",
+        "reason": null,
+        "statement": "Sensitive data capture cannot be disabled in the Agents SDK.",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "uncovered",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "h04",
+        "predicted": "distinct",
+        "reason": "subject_present_but_not_extracted",
+        "statement": "The trace_include_sensitive_data setting is True by default.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "h05",
+        "predicted": "reinforcing",
+        "reason": null,
+        "statement": "You can disable tracing for one run using RunConfig.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "h06",
+        "predicted": "reinforcing",
+        "reason": null,
+        "statement": "Tracing must be enabled manually before it will record anything.",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "h07",
+        "predicted": "unrelated",
+        "reason": null,
+        "statement": "Kubernetes pods are evicted when a node runs out of memory.",
+        "truth": "unrelated"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "h08",
+        "predicted": "unrelated",
+        "reason": null,
+        "statement": "Traces are composed of spans.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "h09",
+        "predicted": "conflicting",
+        "reason": null,
+        "statement": "Tracing is disabled by default for organizations with Zero Data Retention.",
+        "truth": "indeterminate"
+      },
+      {
+        "actual": "uncovered",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "h10",
+        "predicted": "unrelated",
+        "reason": "subject_present_but_not_extracted",
+        "statement": "Custom trace processors can push traces to other destinations.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "h11",
+        "predicted": "reinforcing",
+        "reason": null,
+        "statement": "Tracing is enabled by default in the Agents SDK, so no setup is required.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "h12",
+        "predicted": "unrelated",
+        "reason": null,
+        "statement": "The SDK records spans for guardrails.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "uncovered",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "h13",
+        "predicted": "indeterminate",
+        "reason": "subject_present_but_not_extracted",
+        "statement": "Audio span data is captured by default.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "h14",
+        "predicted": "conflicting",
+        "reason": null,
+        "statement": "Tracing cannot be disabled globally.",
+        "truth": "conflicting"
+      }
+    ],
+    "source_sha256": "816bf4a4d7b207d314a62a8606dbec3bc1a2e1475066f84667ed1fb6ee3ed5d1",
+    "total": 14,
+    "wrong_assertions": 5
+  },
+  "nli-claims/v2": {
+    "accuracy": 0.5,
+    "correct": 14,
+    "declined": 10,
+    "declined_right": 5,
+    "declines": {
+      "model_found_no_relation": 5,
+      "subject_present_but_not_extracted": 5
+    },
+    "errors": {
+      "false conflict": 8,
+      "missed support": 5,
+      "other": 1
+    },
+    "note": "Mechanically sampled from the source page by sample_references.py. No judgement was applied to which sentences were chosen, so this measures the task rather than the system's known weak points. Compare against fixtures/heldout.json, which is a stress set.",
+    "opinions": 18,
+    "opinions_right": 9,
+    "precision": 0.5,
+    "predictions_made": 0,
+    "predictions_right": 0,
+    "rows": [
+      {
+        "actual": "uncovered",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "v01",
+        "predicted": "unknown",
+        "reason": "subject_present_but_not_extracted",
+        "statement": "Using the Traces dashboard, you can debug, visualize, and monitor your workflows during development and in production.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "v01n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Using the Traces dashboard, you can not debug, visualize, and monitor your workflows during development and in production.",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "v02",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "You can disable tracing for a single run by setting agents.run.RunConfig.tracing_disabled to True",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "v02n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "You can not disable tracing for a single run by setting agents.run.RunConfig.tracing_disabled to True",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "v03",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Must have the format trace_<32_alphanumeric>.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "v04",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "The entire Runner.{run, run_sync, run_streamed}() is wrapped in a trace().",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "v04n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "The entire Runner.{run, run_sync, run_streamed}() is not wrapped in a trace().",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "v05",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Each time an agent runs, it is wrapped in agent_span()",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "v05n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Each time an agent runs, it is not wrapped in agent_span()",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "v06",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Guardrails are wrapped in guardrail_span()",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "v06n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Guardrails are not wrapped in guardrail_span()",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "uncovered",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "v07",
+        "predicted": "unknown",
+        "reason": "subject_present_but_not_extracted",
+        "statement": "The SDK may parent related audio spans under a speech_group_span()",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "v07n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "The SDK may not parent related audio spans under a speech_group_span()",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "uncovered",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "v08",
+        "predicted": "unknown",
+        "reason": "subject_present_but_not_extracted",
+        "statement": "If you want a more compact hierarchy, disable the automatic task and turn spans for a run.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "uncovered",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "v09",
+        "predicted": "unknown",
+        "reason": "subject_present_but_not_extracted",
+        "statement": "The default BatchTraceProcessor exports traces in the background every few seconds, or sooner when the in-memory queue reaches its size trigger, and also performs a final flush when the process exits.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "uncovered",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "v10",
+        "predicted": "unknown",
+        "reason": "subject_present_but_not_extracted",
+        "statement": "You can do this by wrapping the entire code in a trace().",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "v10n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "You can not do this by wrapping the entire code in a trace().",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "v11",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Recommended: use the trace as a context manager, i.e. with trace(...) as my_trace.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "v12",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "The current trace is tracked via a Python contextvar.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "v12n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "The current trace is not tracked via a Python contextvar.",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "unrelated",
+        "correct": true,
+        "error_kind": null,
+        "id": "u01",
+        "predicted": "unknown",
+        "reason": "model_found_no_relation",
+        "statement": "The ZIP file format is a common archive and compression standard.",
+        "truth": "unrelated"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "u02",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "This requires the compression.zstd module.",
+        "truth": "unrelated"
+      },
+      {
+        "actual": "unrelated",
+        "correct": true,
+        "error_kind": null,
+        "id": "u03",
+        "predicted": "unknown",
+        "reason": "model_found_no_relation",
+        "statement": "This attribute is a workaround for legacy implementations which produce archives with names in the current locale encoding or code page (mostly on Windows).",
+        "truth": "unrelated"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "u04",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Use io.TextIOWrapper for reading compressed text files in universal newlines mode.",
+        "truth": "unrelated"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": false,
+        "error_kind": "other",
+        "id": "u05",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "ZipFile.write(filename, arcname=None, compress_type=None, compresslevel=None)\u00b6",
+        "truth": "unrelated"
+      },
+      {
+        "actual": "unrelated",
+        "correct": true,
+        "error_kind": null,
+        "id": "u06",
+        "predicted": "unknown",
+        "reason": "model_found_no_relation",
+        "statement": "Debugging information is written to sys.stdout.",
+        "truth": "unrelated"
+      },
+      {
+        "actual": "unrelated",
+        "correct": true,
+        "error_kind": null,
+        "id": "u07",
+        "predicted": "unknown",
+        "reason": "model_found_no_relation",
+        "statement": "Positional and keyword arguments are passed through to io.TextIOWrapper (except buffer, which is implied by the context).",
+        "truth": "unrelated"
+      },
+      {
+        "actual": "unrelated",
+        "correct": true,
+        "error_kind": null,
+        "id": "u08",
+        "predicted": "unknown",
+        "reason": "model_found_no_relation",
+        "statement": "Changed in version 3.6.2: The filename parameter accepts a path-like object.",
+        "truth": "unrelated"
+      }
+    ],
+    "source_sha256": "816bf4a4d7b207d314a62a8606dbec3bc1a2e1475066f84667ed1fb6ee3ed5d1",
+    "total": 28,
+    "wrong_assertions": 9
+  },
+  "nli-material/sampled": {
+    "accuracy": 0.7,
+    "correct": 14,
+    "declined": 0,
+    "declined_right": 0,
+    "declines": {},
+    "errors": {
+      "false conflict": 6
+    },
+    "note": "Mechanically sampled from the source page by sample_references.py. No judgement was applied to which sentences were chosen, so this measures the task rather than the system's known weak points. Compare against fixtures/heldout.json, which is a stress set.",
+    "opinions": 20,
+    "opinions_right": 14,
+    "precision": 0.7,
+    "predictions_made": 0,
+    "predictions_right": 0,
+    "rows": [
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "s01",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "The Agents SDK includes built-in tracing, collecting a comprehensive record of events during an agent run: LLM generations, tool calls, handoffs, guardrails, and even custom events that occur.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "s02",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "You can globally disable tracing in code with set_tracing_disabled(True)",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "s02n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "You can not globally disable tracing in code with set_tracing_disabled(True)",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "s03",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Traces represent a single end-to-end operation of a \"workflow\".",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "s04",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "For example, AgentSpanData contains information about the Agent, GenerationSpanData contains information about the LLM generation, etc.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "s05",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Each model turn is wrapped in a turn_span().",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "s05n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Each model turn is not wrapped in a turn_span().",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "s06",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Function tool calls are each wrapped in function_span()",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "s06n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Function tool calls are not each wrapped in function_span()",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "s07",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Audio outputs (text-to-speech) are wrapped in a speech_span()",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "s07n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Audio outputs (text-to-speech) are not wrapped in a speech_span()",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "s08",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "You can set this name if you use trace, or you can configure the name and other properties with the RunConfig.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "s08n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "You can not set this name if you use trace, or you can configure the name and other properties with the RunConfig.",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "s09",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "In addition, you can set up custom trace processors to push traces to other destinations (as a replacement, or secondary destination).",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "s09n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "In addition, you can not set up custom trace processors to push traces to other destinations (as a replacement, or secondary destination).",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "s10",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Sometimes, you might want multiple calls to run() to be part of a single trace.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "s11",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "You can use the trace() function to create a trace.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "s11n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "You can not use the trace() function to create a trace.",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "s12",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "You can also manually call trace.start() and trace.finish().",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "s12n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "You can not also manually call trace.start() and trace.finish().",
+        "truth": "conflicting"
+      }
+    ],
+    "source_sha256": "816bf4a4d7b207d314a62a8606dbec3bc1a2e1475066f84667ed1fb6ee3ed5d1",
+    "total": 20,
+    "wrong_assertions": 6
+  },
+  "nli-material/stress": {
+    "accuracy": 0.571,
+    "correct": 8,
+    "declined": 0,
+    "declined_right": 0,
+    "declines": {},
+    "errors": {
+      "false conflict": 6
+    },
+    "note": "Held-out evaluation set. Written on 2026-09-12 AFTER the comparator was finished and BEFORE it was run against any of these. Every entry carries `truth`, which is the label a careful reader would assign, and `predicted_system`, which is what I expected this implementation to actually output, recorded in advance. The gap between those two columns is the measurement. Nothing in the comparator may be tuned to make these pass: the moment it is tuned on this set, the set stops being evidence.",
+    "opinions": 14,
+    "opinions_right": 8,
+    "precision": 0.571,
+    "predictions_made": 14,
+    "predictions_right": 5,
+    "rows": [
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "h01",
+        "predicted": "conflicting",
+        "reason": null,
+        "statement": "Agents SDK tracing is turned on unless you disable it.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "h02",
+        "predicted": "unrelated",
+        "reason": null,
+        "statement": "Tracing is unavailable for organizations that use OpenAI's APIs under a Zero Data Retention policy.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "h03",
+        "predicted": "conflicting",
+        "reason": null,
+        "statement": "Sensitive data capture cannot be disabled in the Agents SDK.",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "h04",
+        "predicted": "distinct",
+        "reason": null,
+        "statement": "The trace_include_sensitive_data setting is True by default.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "h05",
+        "predicted": "reinforcing",
+        "reason": null,
+        "statement": "You can disable tracing for one run using RunConfig.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "h06",
+        "predicted": "reinforcing",
+        "reason": null,
+        "statement": "Tracing must be enabled manually before it will record anything.",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "h07",
+        "predicted": "unrelated",
+        "reason": null,
+        "statement": "Kubernetes pods are evicted when a node runs out of memory.",
+        "truth": "unrelated"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "h08",
+        "predicted": "unrelated",
+        "reason": null,
+        "statement": "Traces are composed of spans.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "h09",
+        "predicted": "conflicting",
+        "reason": null,
+        "statement": "Tracing is disabled by default for organizations with Zero Data Retention.",
+        "truth": "indeterminate"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "h10",
+        "predicted": "unrelated",
+        "reason": null,
+        "statement": "Custom trace processors can push traces to other destinations.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "h11",
+        "predicted": "reinforcing",
+        "reason": null,
+        "statement": "Tracing is enabled by default in the Agents SDK, so no setup is required.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "h12",
+        "predicted": "unrelated",
+        "reason": null,
+        "statement": "The SDK records spans for guardrails.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "h13",
+        "predicted": "indeterminate",
+        "reason": null,
+        "statement": "Audio span data is captured by default.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "h14",
+        "predicted": "conflicting",
+        "reason": null,
+        "statement": "Tracing cannot be disabled globally.",
+        "truth": "conflicting"
+      }
+    ],
+    "source_sha256": "816bf4a4d7b207d314a62a8606dbec3bc1a2e1475066f84667ed1fb6ee3ed5d1",
+    "total": 14,
+    "wrong_assertions": 6
+  },
+  "nli-material/v2": {
+    "accuracy": 0.536,
+    "correct": 15,
+    "declined": 2,
+    "declined_right": 2,
+    "declines": {
+      "model_found_no_relation": 2
+    },
+    "errors": {
+      "false conflict": 13
+    },
+    "note": "Mechanically sampled from the source page by sample_references.py. No judgement was applied to which sentences were chosen, so this measures the task rather than the system's known weak points. Compare against fixtures/heldout.json, which is a stress set.",
+    "opinions": 26,
+    "opinions_right": 13,
+    "precision": 0.5,
+    "predictions_made": 0,
+    "predictions_right": 0,
+    "rows": [
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "v01",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Using the Traces dashboard, you can debug, visualize, and monitor your workflows during development and in production.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "v01n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Using the Traces dashboard, you can not debug, visualize, and monitor your workflows during development and in production.",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "v02",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "You can disable tracing for a single run by setting agents.run.RunConfig.tracing_disabled to True",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "v02n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "You can not disable tracing for a single run by setting agents.run.RunConfig.tracing_disabled to True",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "v03",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Must have the format trace_<32_alphanumeric>.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "v04",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "The entire Runner.{run, run_sync, run_streamed}() is wrapped in a trace().",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "v04n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "The entire Runner.{run, run_sync, run_streamed}() is not wrapped in a trace().",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "v05",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Each time an agent runs, it is wrapped in agent_span()",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "v05n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Each time an agent runs, it is not wrapped in agent_span()",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "v06",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Guardrails are wrapped in guardrail_span()",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "v06n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Guardrails are not wrapped in guardrail_span()",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "v07",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "The SDK may parent related audio spans under a speech_group_span()",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "v07n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "The SDK may not parent related audio spans under a speech_group_span()",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "v08",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "If you want a more compact hierarchy, disable the automatic task and turn spans for a run.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "v09",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "The default BatchTraceProcessor exports traces in the background every few seconds, or sooner when the in-memory queue reaches its size trigger, and also performs a final flush when the process exits.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "v10",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "You can do this by wrapping the entire code in a trace().",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "v10n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "You can not do this by wrapping the entire code in a trace().",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "v11",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Recommended: use the trace as a context manager, i.e. with trace(...) as my_trace.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "v12",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "The current trace is tracked via a Python contextvar.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "v12n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "The current trace is not tracked via a Python contextvar.",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "u01",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "The ZIP file format is a common archive and compression standard.",
+        "truth": "unrelated"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "u02",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "This requires the compression.zstd module.",
+        "truth": "unrelated"
+      },
+      {
+        "actual": "unrelated",
+        "correct": true,
+        "error_kind": null,
+        "id": "u03",
+        "predicted": "unknown",
+        "reason": "model_found_no_relation",
+        "statement": "This attribute is a workaround for legacy implementations which produce archives with names in the current locale encoding or code page (mostly on Windows).",
+        "truth": "unrelated"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "u04",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Use io.TextIOWrapper for reading compressed text files in universal newlines mode.",
+        "truth": "unrelated"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "u05",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "ZipFile.write(filename, arcname=None, compress_type=None, compresslevel=None)\u00b6",
+        "truth": "unrelated"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "u06",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Debugging information is written to sys.stdout.",
+        "truth": "unrelated"
+      },
+      {
+        "actual": "unrelated",
+        "correct": true,
+        "error_kind": null,
+        "id": "u07",
+        "predicted": "unknown",
+        "reason": "model_found_no_relation",
+        "statement": "Positional and keyword arguments are passed through to io.TextIOWrapper (except buffer, which is implied by the context).",
+        "truth": "unrelated"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "u08",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "Changed in version 3.6.2: The filename parameter accepts a path-like object.",
+        "truth": "unrelated"
+      }
+    ],
+    "source_sha256": "816bf4a4d7b207d314a62a8606dbec3bc1a2e1475066f84667ed1fb6ee3ed5d1",
+    "total": 28,
+    "wrong_assertions": 13
+  },
+  "rules/sampled": {
+    "accuracy": 0.15,
+    "correct": 3,
+    "declined": 17,
+    "declined_right": 0,
+    "declines": {
+      "no_axis_for_statement": 17
+    },
+    "errors": {
+      "missed conflict": 7,
+      "missed support": 10
+    },
+    "note": "Mechanically sampled from the source page by sample_references.py. No judgement was applied to which sentences were chosen, so this measures the task rather than the system's known weak points. Compare against fixtures/heldout.json, which is a stress set.",
+    "opinions": 3,
+    "opinions_right": 3,
+    "precision": 1.0,
+    "predictions_made": 0,
+    "predictions_right": 0,
+    "rows": [
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "s01",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "The Agents SDK includes built-in tracing, collecting a comprehensive record of events during an agent run: LLM generations, tool calls, handoffs, guardrails, and even custom events that occur.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "s02",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "You can globally disable tracing in code with set_tracing_disabled(True)",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "s02n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "You can not globally disable tracing in code with set_tracing_disabled(True)",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "s03",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "Traces represent a single end-to-end operation of a \"workflow\".",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "s04",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "For example, AgentSpanData contains information about the Agent, GenerationSpanData contains information about the LLM generation, etc.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "s05",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "Each model turn is wrapped in a turn_span().",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed conflict",
+        "id": "s05n",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "Each model turn is not wrapped in a turn_span().",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "s06",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "Function tool calls are each wrapped in function_span()",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed conflict",
+        "id": "s06n",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "Function tool calls are not each wrapped in function_span()",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "s07",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "Audio outputs (text-to-speech) are wrapped in a speech_span()",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed conflict",
+        "id": "s07n",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "Audio outputs (text-to-speech) are not wrapped in a speech_span()",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "s08",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "You can set this name if you use trace, or you can configure the name and other properties with the RunConfig.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed conflict",
+        "id": "s08n",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "You can not set this name if you use trace, or you can configure the name and other properties with the RunConfig.",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "s09",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "In addition, you can set up custom trace processors to push traces to other destinations (as a replacement, or secondary destination).",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed conflict",
+        "id": "s09n",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "In addition, you can not set up custom trace processors to push traces to other destinations (as a replacement, or secondary destination).",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "s10",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "Sometimes, you might want multiple calls to run() to be part of a single trace.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "s11",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "You can use the trace() function to create a trace.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed conflict",
+        "id": "s11n",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "You can not use the trace() function to create a trace.",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "s12",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "You can also manually call trace.start() and trace.finish().",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed conflict",
+        "id": "s12n",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "You can not also manually call trace.start() and trace.finish().",
+        "truth": "conflicting"
+      }
+    ],
+    "source_sha256": "816bf4a4d7b207d314a62a8606dbec3bc1a2e1475066f84667ed1fb6ee3ed5d1",
+    "total": 20,
+    "wrong_assertions": 0
+  },
+  "rules/stress": {
+    "accuracy": 0.214,
+    "correct": 3,
+    "declined": 7,
+    "declined_right": 1,
+    "declines": {
+      "no_axis_for_statement": 4,
+      "subject_absent_from_source": 1,
+      "subject_present_but_not_extracted": 2
+    },
+    "errors": {
+      "false conflict": 3,
+      "missed conflict": 2,
+      "missed support": 6
+    },
+    "note": "Held-out evaluation set. Written on 2026-09-12 AFTER the comparator was finished and BEFORE it was run against any of these. Every entry carries `truth`, which is the label a careful reader would assign, and `predicted_system`, which is what I expected this implementation to actually output, recorded in advance. The gap between those two columns is the measurement. Nothing in the comparator may be tuned to make these pass: the moment it is tuned on this set, the set stops being evidence.",
+    "opinions": 7,
+    "opinions_right": 2,
+    "precision": 0.286,
+    "predictions_made": 14,
+    "predictions_right": 7,
+    "rows": [
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "h01",
+        "predicted": "conflicting",
+        "reason": null,
+        "statement": "Agents SDK tracing is turned on unless you disable it.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "h02",
+        "predicted": "unrelated",
+        "reason": "no_axis_for_statement",
+        "statement": "Tracing is unavailable for organizations that use OpenAI's APIs under a Zero Data Retention policy.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "uncovered",
+        "correct": false,
+        "error_kind": "missed conflict",
+        "id": "h03",
+        "predicted": "conflicting",
+        "reason": "subject_present_but_not_extracted",
+        "statement": "Sensitive data capture cannot be disabled in the Agents SDK.",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "distinct",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "h04",
+        "predicted": "distinct",
+        "reason": null,
+        "statement": "The trace_include_sensitive_data setting is True by default.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "h05",
+        "predicted": "reinforcing",
+        "reason": null,
+        "statement": "You can disable tracing for one run using RunConfig.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": false,
+        "error_kind": "missed conflict",
+        "id": "h06",
+        "predicted": "reinforcing",
+        "reason": null,
+        "statement": "Tracing must be enabled manually before it will record anything.",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "unrelated",
+        "correct": true,
+        "error_kind": null,
+        "id": "h07",
+        "predicted": "unrelated",
+        "reason": "subject_absent_from_source",
+        "statement": "Kubernetes pods are evicted when a node runs out of memory.",
+        "truth": "unrelated"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "h08",
+        "predicted": "unrelated",
+        "reason": "no_axis_for_statement",
+        "statement": "Traces are composed of spans.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": false,
+        "error_kind": "false conflict",
+        "id": "h09",
+        "predicted": "conflicting",
+        "reason": null,
+        "statement": "Tracing is disabled by default for organizations with Zero Data Retention.",
+        "truth": "indeterminate"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "h10",
+        "predicted": "unrelated",
+        "reason": "no_axis_for_statement",
+        "statement": "Custom trace processors can push traces to other destinations.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "h11",
+        "predicted": "reinforcing",
+        "reason": null,
+        "statement": "Tracing is enabled by default in the Agents SDK, so no setup is required.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "h12",
+        "predicted": "unrelated",
+        "reason": "no_axis_for_statement",
+        "statement": "The SDK records spans for guardrails.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "uncovered",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "h13",
+        "predicted": "indeterminate",
+        "reason": "subject_present_but_not_extracted",
+        "statement": "Audio span data is captured by default.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "h14",
+        "predicted": "conflicting",
+        "reason": null,
+        "statement": "Tracing cannot be disabled globally.",
+        "truth": "conflicting"
+      }
+    ],
+    "source_sha256": "816bf4a4d7b207d314a62a8606dbec3bc1a2e1475066f84667ed1fb6ee3ed5d1",
+    "total": 14,
+    "wrong_assertions": 5
+  },
+  "rules/v2": {
+    "accuracy": 0.357,
+    "correct": 10,
+    "declined": 26,
+    "declined_right": 8,
+    "declines": {
+      "no_axis_for_statement": 16,
+      "subject_absent_from_source": 8,
+      "subject_present_but_not_extracted": 2
+    },
+    "errors": {
+      "missed conflict": 7,
+      "missed support": 11
+    },
+    "note": "Mechanically sampled from the source page by sample_references.py. No judgement was applied to which sentences were chosen, so this measures the task rather than the system's known weak points. Compare against fixtures/heldout.json, which is a stress set.",
+    "opinions": 2,
+    "opinions_right": 2,
+    "precision": 1.0,
+    "predictions_made": 0,
+    "predictions_right": 0,
+    "rows": [
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "v01",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "Using the Traces dashboard, you can debug, visualize, and monitor your workflows during development and in production.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed conflict",
+        "id": "v01n",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "Using the Traces dashboard, you can not debug, visualize, and monitor your workflows during development and in production.",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "reinforcing",
+        "correct": true,
+        "error_kind": null,
+        "id": "v02",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "You can disable tracing for a single run by setting agents.run.RunConfig.tracing_disabled to True",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "conflicting",
+        "correct": true,
+        "error_kind": null,
+        "id": "v02n",
+        "predicted": "unknown",
+        "reason": null,
+        "statement": "You can not disable tracing for a single run by setting agents.run.RunConfig.tracing_disabled to True",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "uncovered",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "v03",
+        "predicted": "unknown",
+        "reason": "subject_present_but_not_extracted",
+        "statement": "Must have the format trace_<32_alphanumeric>.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "v04",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "The entire Runner.{run, run_sync, run_streamed}() is wrapped in a trace().",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed conflict",
+        "id": "v04n",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "The entire Runner.{run, run_sync, run_streamed}() is not wrapped in a trace().",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "v05",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "Each time an agent runs, it is wrapped in agent_span()",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed conflict",
+        "id": "v05n",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "Each time an agent runs, it is not wrapped in agent_span()",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "v06",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "Guardrails are wrapped in guardrail_span()",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed conflict",
+        "id": "v06n",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "Guardrails are not wrapped in guardrail_span()",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "v07",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "The SDK may parent related audio spans under a speech_group_span()",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed conflict",
+        "id": "v07n",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "The SDK may not parent related audio spans under a speech_group_span()",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "uncovered",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "v08",
+        "predicted": "unknown",
+        "reason": "subject_present_but_not_extracted",
+        "statement": "If you want a more compact hierarchy, disable the automatic task and turn spans for a run.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "v09",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "The default BatchTraceProcessor exports traces in the background every few seconds, or sooner when the in-memory queue reaches its size trigger, and also performs a final flush when the process exits.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "v10",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "You can do this by wrapping the entire code in a trace().",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed conflict",
+        "id": "v10n",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "You can not do this by wrapping the entire code in a trace().",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "v11",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "Recommended: use the trace as a context manager, i.e. with trace(...) as my_trace.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed support",
+        "id": "v12",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "The current trace is tracked via a Python contextvar.",
+        "truth": "reinforcing"
+      },
+      {
+        "actual": "unrepresentable",
+        "correct": false,
+        "error_kind": "missed conflict",
+        "id": "v12n",
+        "predicted": "unknown",
+        "reason": "no_axis_for_statement",
+        "statement": "The current trace is not tracked via a Python contextvar.",
+        "truth": "conflicting"
+      },
+      {
+        "actual": "unrelated",
+        "correct": true,
+        "error_kind": null,
+        "id": "u01",
+        "predicted": "unknown",
+        "reason": "subject_absent_from_source",
+        "statement": "The ZIP file format is a common archive and compression standard.",
+        "truth": "unrelated"
+      },
+      {
+        "actual": "unrelated",
+        "correct": true,
+        "error_kind": null,
+        "id": "u02",
+        "predicted": "unknown",
+        "reason": "subject_absent_from_source",
+        "statement": "This requires the compression.zstd module.",
+        "truth": "unrelated"
+      },
+      {
+        "actual": "unrelated",
+        "correct": true,
+        "error_kind": null,
+        "id": "u03",
+        "predicted": "unknown",
+        "reason": "subject_absent_from_source",
+        "statement": "This attribute is a workaround for legacy implementations which produce archives with names in the current locale encoding or code page (mostly on Windows).",
+        "truth": "unrelated"
+      },
+      {
+        "actual": "unrelated",
+        "correct": true,
+        "error_kind": null,
+        "id": "u04",
+        "predicted": "unknown",
+        "reason": "subject_absent_from_source",
+        "statement": "Use io.TextIOWrapper for reading compressed text files in universal newlines mode.",
+        "truth": "unrelated"
+      },
+      {
+        "actual": "unrelated",
+        "correct": true,
+        "error_kind": null,
+        "id": "u05",
+        "predicted": "unknown",
+        "reason": "subject_absent_from_source",
+        "statement": "ZipFile.write(filename, arcname=None, compress_type=None, compresslevel=None)\u00b6",
+        "truth": "unrelated"
+      },
+      {
+        "actual": "unrelated",
+        "correct": true,
+        "error_kind": null,
+        "id": "u06",
+        "predicted": "unknown",
+        "reason": "subject_absent_from_source",
+        "statement": "Debugging information is written to sys.stdout.",
+        "truth": "unrelated"
+      },
+      {
+        "actual": "unrelated",
+        "correct": true,
+        "error_kind": null,
+        "id": "u07",
+        "predicted": "unknown",
+        "reason": "subject_absent_from_source",
+        "statement": "Positional and keyword arguments are passed through to io.TextIOWrapper (except buffer, which is implied by the context).",
+        "truth": "unrelated"
+      },
+      {
+        "actual": "unrelated",
+        "correct": true,
+        "error_kind": null,
+        "id": "u08",
+        "predicted": "unknown",
+        "reason": "subject_absent_from_source",
+        "statement": "Changed in version 3.6.2: The filename parameter accepts a path-like object.",
+        "truth": "unrelated"
+      }
+    ],
+    "source_sha256": "816bf4a4d7b207d314a62a8606dbec3bc1a2e1475066f84667ed1fb6ee3ed5d1",
+    "total": 28,
+    "wrong_assertions": 0
+  }
+}
