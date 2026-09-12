@@ -1,0 +1,120 @@
+{
+  "note": "Held-out evaluation set. Written on 2026-09-12 AFTER the comparator was finished and BEFORE it was run against any of these. Every entry carries `truth`, which is the label a careful reader would assign, and `predicted_system`, which is what I expected this implementation to actually output, recorded in advance. The gap between those two columns is the measurement. Nothing in the comparator may be tuned to make these pass: the moment it is tuned on this set, the set stops being evidence.",
+  "focus_terms": ["tracing", "traces", "trace", "spans", "span", "sdk", "agents", "sensitive", "data", "workflow"],
+  "references": [
+    {
+      "id": "h01",
+      "statement": "Agents SDK tracing is turned on unless you disable it.",
+      "truth": "reinforcing",
+      "predicted_system": "conflicting",
+      "why": "Paraphrase with no shared polarity vocabulary. 'Turned on' is not read as a positive marker, and the word 'disable' in the subordinate clause is. Expected to be wrong."
+    },
+    {
+      "id": "h02",
+      "statement": "Tracing is unavailable for organizations that use OpenAI's APIs under a Zero Data Retention policy.",
+      "truth": "reinforcing",
+      "predicted_system": "unrelated",
+      "why": "Verbatim page content, but 'unavailable' sits on no declared axis, so no proposition is formed."
+    },
+    {
+      "id": "h03",
+      "statement": "Sensitive data capture cannot be disabled in the Agents SDK.",
+      "truth": "conflicting",
+      "predicted_system": "conflicting",
+      "why": "Negation directly before the axis word should flip polarity against the sensitive-data claim."
+    },
+    {
+      "id": "h04",
+      "statement": "The trace_include_sensitive_data setting is True by default.",
+      "truth": "reinforcing",
+      "predicted_system": "distinct",
+      "why": "True on the page, but it sits on the truth axis while the extracted claims sit on enablement and inclusion."
+    },
+    {
+      "id": "h05",
+      "statement": "You can disable tracing for one run using RunConfig.",
+      "truth": "reinforcing",
+      "predicted_system": "reinforcing",
+      "why": "Close restatement of the per-run claim, sharing both vocabulary and polarity."
+    },
+    {
+      "id": "h06",
+      "statement": "Tracing must be enabled manually before it will record anything.",
+      "truth": "conflicting",
+      "predicted_system": "reinforcing",
+      "why": "The hardest case in the set. It contradicts the default, but it does so through modality rather than polarity, and 'enabled' reads as agreement. Expected to be wrong in the worst direction, calling a contradiction support."
+    },
+    {
+      "id": "h07",
+      "statement": "Kubernetes pods are evicted when a node runs out of memory.",
+      "truth": "unrelated",
+      "predicted_system": "unrelated",
+      "why": "No axis and no subject overlap."
+    },
+    {
+      "id": "h08",
+      "statement": "Traces are composed of spans.",
+      "truth": "reinforcing",
+      "predicted_system": "unrelated",
+      "why": "Verbatim page content, but a structural fact on no declared axis."
+    },
+    {
+      "id": "h09",
+      "statement": "Tracing is disabled by default for organizations with Zero Data Retention.",
+      "truth": "indeterminate",
+      "predicted_system": "conflicting",
+      "why": "Scoped to a subgroup the page treats separately. Calling it a flat contradiction of the global default is a false conflict, which is the expensive kind of error."
+    },
+    {
+      "id": "h10",
+      "statement": "Custom trace processors can push traces to other destinations.",
+      "truth": "reinforcing",
+      "predicted_system": "unrelated",
+      "why": "Verbatim page content on no declared axis."
+    },
+    {
+      "id": "h11",
+      "statement": "Tracing is enabled by default in the Agents SDK, so no setup is required.",
+      "truth": "reinforcing",
+      "predicted_system": "reinforcing",
+      "why": "Shares subject, axis, polarity and the by-default scope."
+    },
+    {
+      "id": "h12",
+      "statement": "The SDK records spans for guardrails.",
+      "truth": "reinforcing",
+      "predicted_system": "unrelated",
+      "why": "'Records' is not in the inclusion vocabulary even though 'recorded' is. Tests how brittle the hand-listed axis words are."
+    },
+    {
+      "id": "h13",
+      "statement": "Audio span data is captured by default.",
+      "truth": "reinforcing",
+      "predicted_system": "indeterminate",
+      "why": "On the inclusion axis with a by-default scope that no extracted claim carries, so the scope rule should refuse to decide rather than guess."
+    },
+    {
+      "id": "h14",
+      "statement": "Tracing cannot be disabled globally.",
+      "truth": "conflicting",
+      "predicted_system": "conflicting",
+      "why": "Negation before the axis word, with a global scope the source claims carry."
+    }
+  ],
+  "expectations": [
+    {"reference_id": "h01", "expected": "reinforcing"},
+    {"reference_id": "h02", "expected": "reinforcing"},
+    {"reference_id": "h03", "expected": "conflicting"},
+    {"reference_id": "h04", "expected": "reinforcing"},
+    {"reference_id": "h05", "expected": "reinforcing"},
+    {"reference_id": "h06", "expected": "conflicting"},
+    {"reference_id": "h07", "expected": "unrelated"},
+    {"reference_id": "h08", "expected": "reinforcing"},
+    {"reference_id": "h09", "expected": "indeterminate"},
+    {"reference_id": "h10", "expected": "reinforcing"},
+    {"reference_id": "h11", "expected": "reinforcing"},
+    {"reference_id": "h12", "expected": "reinforcing"},
+    {"reference_id": "h13", "expected": "reinforcing"},
+    {"reference_id": "h14", "expected": "conflicting"}
+  ]
+}
