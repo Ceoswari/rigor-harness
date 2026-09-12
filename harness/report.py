@@ -64,6 +64,23 @@ def write_markdown(run: Dict, verification: Dict, path: str) -> str:
             lines.append("Evidence (%s): %s"
                          % (comp["evidence"]["claim_id"], comp["evidence"]["source_sentence"]))
         lines.append("")
+    cov = verification.get("coverage")
+    if cov:
+        lines.append("## Coverage")
+        lines.append("")
+        lines.append("What the run did not say, which the verification checks below used "
+                     "to be blind to.")
+        lines.append("")
+        pct = cov.get("extraction_coverage")
+        lines.append("- Extraction represented **%s of the %d material sentences** on the "
+                     "page%s."
+                     % (cov["sentences_represented_by_a_claim"], cov["material_sentences"],
+                        "" if pct is None else " (%.0f%%)" % (100 * pct)))
+        lines.append("- Of %d references, **%d were answered and %d declined**."
+                     % (cov["references"], cov["asserted"], cov["declined"]))
+        for reason, count in sorted(cov.get("declined_by_reason", {}).items()):
+            lines.append("  - `%s`: %d" % (reason, count))
+        lines.append("")
     lines.append("## Verification")
     lines.append("")
     lines.append(verification["summary"])

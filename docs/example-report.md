@@ -5,7 +5,7 @@
 ## Source
 
 - URL: https://openai.github.io/openai-agents-python/tracing/
-- Fetched: 2026-09-12T18:11:43Z (HTTP 200)
+- Fetched: 2026-09-12T18:18:48Z (HTTP 200)
 - Content SHA-256: `816bf4a4d7b207d3`
 - Revision count: 1
 
@@ -46,9 +46,17 @@ The source does not discuss this subject, and the reference states no claim on a
 
 Reason: `subject_absent_from_source`
 
+## Coverage
+
+What the run did not say, which the verification checks below used to be blind to.
+
+- Extraction represented **7 of the 63 material sentences** on the page (11%).
+- Of 3 references, **2 were answered and 1 declined**.
+  - `subject_absent_from_source`: 1
+
 ## Verification
 
-All 10 verification checks passed.
+All 11 verification checks passed.
 
 - [PASS] **provenance_present** Source record carries url, content hash and first-seen timestamp.
 - [PASS] **claims_bounded** Extracted 8 claims; a bounded set is 1-12.
@@ -57,6 +65,7 @@ All 10 verification checks passed.
 - [PASS] **declined_results_name_a_reason** Every comparison that declines to decide records why (1 of 3 declined).
 - [PASS] **labels_are_in_the_known_vocabulary** Every classification is one the verifier recognises.
 - [PASS] **beats_naive_overlap_baseline** Near-duplicate references separated by classification (ref_a/ref_b overlap 0.83 -> reinforcing vs conflicting). A surface-similarity comparator scores these pairs as the same statement and cannot split them.
+- [PASS] **answers_more_often_than_it_declines** Declined 1 of 3 references (subject_absent_from_source 1). Extraction represents 7 (11%) of the page's 63 material sentences.
 - [PASS] **expectation_ref_a** Expected 'reinforcing' for ref_a, got 'reinforcing'.
 - [PASS] **expectation_ref_b** Expected 'conflicting' for ref_b, got 'conflicting'.
 - [PASS] **expectation_ref_c** Expected 'unrelated' for ref_c, got 'unrelated'.

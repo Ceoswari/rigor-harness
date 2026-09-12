@@ -89,6 +89,7 @@ def main(argv=None):
         "sources_in_store": store.count(),
         "claims": claims,
         "comparisons": comparisons,
+        "focus_terms": sorted(focus),
         "limitations": LIMITATIONS,
     }
     verification = verify.verify(run, expectations)

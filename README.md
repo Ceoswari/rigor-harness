@@ -24,7 +24,7 @@ python3 run.py                    # fetch the live page, classify, verify, repor
 python3 run.py --inject-failure   # prove a failed check is reported, not hidden
 python3 evaluate.py               # measure against both reference sets
 python3 sample_references.py      # regenerate the mechanically sampled set
-python3 -m unittest discover -s tests -v      # 37 tests, no network needed
+python3 -m unittest discover -s tests -v      # 45 tests, no network needed
 ```
 
 `run.py` writes `out/run.json` and `out/report.md`, and exits 0 when verification passes
@@ -106,15 +106,35 @@ about Kubernetes.
 
 The verifier imports nothing from the extraction or comparison modules, including their
 tokenizer. A verifier that reuses the classifier's own logic cannot catch the classifier's
-own mistakes. It runs 10 checks: provenance present, claim set bounded, every claim verbatim in the
+own mistakes. It runs 11 checks: provenance present, claim set bounded, every claim verbatim in the
 fetched source, every classification that asserts a relationship citing its source
 sentence, every classification that declines recording why, every label being one the
-verifier recognises, the near-duplicate references actually separated, and the three
-fixture expectations.
+verifier recognises, the run answering more often than it declines, the near-duplicate
+references actually separated, and the three fixture expectations.
 
 The grounding check is the one that earns its keep. It re-reads each claim against the
 fetched source text, so a fabricated or paraphrased claim fails the run even when every
 other stage reports success.
+
+### Counting what the run did not say
+
+Verification used to ask one question, whether the answers given were correct, and never
+asked how many answers were withheld. That is how a system representing a fraction of the
+page passed cleanly, and it is why neither the tests nor I caught the narrow coverage until
+an unbiased evaluation set and Kevin Ng's review found it independently.
+
+So every run now reports coverage, and the verifier derives it rather than reading it off
+the pipeline. On the live page today: **extraction represents 7 of the page's 63 material
+sentences, about 11%**. The verifier counts those 63 with its own sentence splitter and its
+own notion of materiality, deliberately not shared with `harness/claims.py`, so the number
+does not move when extraction's heuristics move. Planting a false coverage figure in the run
+does not change what the verifier reports, and there is a test for that.
+
+One coverage check can fail a run: `answers_more_often_than_it_declines`. The threshold is
+not a quality bar, it is a floor against the specific failure mode above, being a run that
+answers almost nothing and still reports success. Against the three pilot references the
+system answers two and declines one, so it passes. Against the 20 sampled references it
+would decline 17 and fail, which is the correct signal.
 
 ## How good is it, really
 
@@ -259,13 +279,14 @@ Sentence splitting is tuned for documentation pages rather than prose. Materiali
 a heuristic, and the September 11 drift showed that a bounded set plus a heuristic ranking is
 where this design is most fragile.
 
-**What I would build next, in order.** The `unrelated` split described above is done, and it
-was the first item. Next is a coverage number in the verifier: the run should report what
-share of the page's material sentences it could not represent at all, because right now the
-verifier checks whether its answers are correct and never counts what it declined to say,
-which is exactly how this got past me. Then replace the comparator with an NLI cross-encoder
-while keeping the deterministic verifier unchanged, and measure it against both sets, where
-it has to beat 3 of 14 and 3 of 20. Add a decontextualization stage so claims stand alone. Schedule
+**What I would build next.** The first two items are done: the `unrelated` split, and the
+coverage number in the verifier, both described above. The remaining one is replacing the
+comparator with an NLI cross-encoder while keeping the deterministic verifier unchanged, and
+measuring it against both frozen sets, where it has to beat 3 of 14 and 3 of 20. The coverage
+figure gives it a second bar to clear that accuracy alone would hide: 11% of the page's
+material sentences represented, and 17 of 20 sampled references declined for want of an axis.
+A model that answers more of them without losing the verifier's grounding check is the whole
+bet, and it can now be measured rather than asserted. Add a decontextualization stage so claims stand alone. Schedule
 the run so upstream drift is caught on a cadence rather than by accident, and diff claims
 between revisions so the report says what changed rather than only that the hash changed.
 
@@ -283,7 +304,7 @@ harness/report.py           JSON and Markdown output
 fixtures/references.json    the three pilot references and their expectations
 fixtures/heldout.json       14 stress references with truth and advance predictions
 fixtures/sampled.json       20 references generated mechanically from the page
-tests/                      37 tests, two saved copies of the source page
+tests/                      45 tests, two saved copies of the source page
 REUSE_SCAN.md               the current-state scan, with benchmarks and sources
 docs/example-report.md      committed sample of the human-readable output
 docs/evaluation-results.md  committed scorecards for both sets
